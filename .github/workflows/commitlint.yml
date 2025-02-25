@@ -1,0 +1,19 @@
+name: Commitlint
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['main']
+  pull_request:
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    name: Commitlint
+    permissions:
+      contents: read  # Permission to read repository contents
+      pull-requests: read  # Permission to interact with pull requests (if needed)
+    
+    steps:
+      - name: Run commitlint
+        uses: opensource-nepal/commitlint@v1
