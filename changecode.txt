@@ -1,31 +1,10 @@
-import { Menu } from "@/types/menu";
+This is the Code Which I changed in Location: "src\components\Header\menuData.tsx"
 
-const menuData: Menu[] = [
-  {
-    id: 1,
-    title: "Home",
-    path: "/",
-    newTab: false,
-  },
-  {
-    id: 2,
-    title: "About",
-    path: "/about",
-    newTab: false,
-  },
-  {
-    id: 3,
-    title: "Pricing",
-    path: "/pricing",
-    newTab: false,
-  },
-  {
-    id: 5,
-    title: "Contact",
-    path: "/contact",
-    newTab: false,
-  },
-  {
+1. I changed the duplicate ID's which was there for Contact(id:5) and Blog(id:5) to Blog(id:6)
+2. I commented out the pages so It will not render the pages.
+3. I kept "submenu" in "index.tsx" because we can use that to provide dropdown for the "PROFILE/USER" Details in future if we want.
+
+{
     id: 6,
     title: "Blog",
     path: "/blogs",
@@ -80,5 +59,3 @@ const menuData: Menu[] = [
   //     },
   //   ],
   // },
-];
-export default menuData;
