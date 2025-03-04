@@ -12,7 +12,7 @@ importers:
         specifier: ^1.5.0
         version: 1.6.0(@prisma/client@5.22.0(prisma@5.22.0))(nodemailer@6.10.0)
       '@prisma/client':
-        specifier: ^5.11.0
+        specifier: ^5.22.0
         version: 5.22.0(prisma@5.22.0)
       axios:
         specifier: ^1.6.2
@@ -44,9 +44,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.5.7
         version: 0.5.14(prettier@3.5.2)
-      prisma:
-        specifier: ^5.7.0
-        version: 5.22.0
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
@@ -102,6 +99,9 @@ importers:
       postcss:
         specifier: ^8
         version: 8.5.3
+      prisma:
+        specifier: ^5.22.0
+        version: 5.22.0
       tailwindcss:
         specifier: ^3.3.0
         version: 3.4.17

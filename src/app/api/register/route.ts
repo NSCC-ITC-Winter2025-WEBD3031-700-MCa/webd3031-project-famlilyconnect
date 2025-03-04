@@ -5,6 +5,8 @@ import { prisma } from "@/utils/prismaDB";
 export async function POST(request: any) {
   const body = await request.json();
   const { name, email, password } = body;
+  
+  console.log("Extracted fields:", { name, email, password });
 
   if (!name || !email || !password) {
     return NextResponse.json("Missing Fields", { status: 400 });
