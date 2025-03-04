@@ -112,7 +112,66 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async signIn({ user, account, profile }) {
+      if (account?.provider === "google" || account?.provider === "github") {
+        // Ensure profile exists and has required fields
+        if (!profile || !profile.email || !profile.name) {
+          throw new Error("Profile information is incomplete.");
+        }
+    
+        // Check if the user already exists
+        const existingUser = await prisma.user.findUnique({
+          where: { email: profile.email },
+        });
+    
+        if (existingUser) {
+          // Check if the account already exists
+          const existingAccount = await prisma.account.findUnique({
+            where: {
+              provider_providerAccountId: {
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+              },
+            },
+          });
+    
+          if (!existingAccount) {
+            // Link the OAuth account to the existing user
+            await prisma.account.create({
+              data: {
+                userId: existingUser.id,
+                type: account.type,
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+              },
+            });
+          }
+          user.id = existingUser.id;
+        } else {
+          // Create a new user
+          const newUser = await prisma.user.create({
+            data: {
+              name: profile.name,
+              email: profile.email,
+              // image: profile.picture || null,
+              accounts: {
+                create: {
+                  type: account.type,
+                  provider: account.provider,
+                  providerAccountId: account.providerAccountId,
+                },
+              },
+            },
+          });
+          user.id = newUser.id;
+        }
+      }
+      return true;
+    }
+    
   },
+
+  
 
   // debug: process.env.NODE_ENV === "developement",
 };
