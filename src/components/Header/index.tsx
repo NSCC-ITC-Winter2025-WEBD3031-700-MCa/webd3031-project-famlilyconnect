@@ -55,52 +55,42 @@ const Header = () => {
         <div className="container">
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4">
-              <Link
-                href="/"
-                className={`navbar-logo block w-full ${
-                  sticky ? "py-2" : "py-5"
-                } `}
+            <Link
+              href="/"
+              className={`navbar-logo flex items-end gap-2 ${
+                sticky ? "py-2" : "py-5"
+              }`}
+            >
+              <div className="w-12 md:w-14 flex-shrink-0">
+                <Image
+                  src={sticky ? "/images/logo/family.png" : "/images/logo/family_white.png"}
+                  alt="logo"
+                  width={sticky ? 48 : 56}  
+                  height={sticky ? 48 : 56}
+                  className="header-logo dark:hidden"
+                />
+                <Image
+                  src={"/images/logo/family_white.png"}
+                  alt="logo"
+                  width={sticky ? 48 : 56}
+                  height={sticky ? 48 : 56}
+                  className="header-logo hidden dark:block"
+                />
+              </div>
+
+              <span
+                className={`hidden sm:flex gap-1 font-semibold tracking-wide transition-all whitespace-nowrap ${
+                  sticky ? "text-lg md:text-xl text-gray-900 dark:text-white" 
+                        : "text-xl md:text-2xl text-gray-100 dark:text-gray-300"
+                }`}
               >
-                {pathUrl !== "/" ? (
-                  <>
-                    <Image
-                      src={`/images/logo/logo.svg`}
-                      alt="logo"
-                      width={240}
-                      height={30}
-                      className="header-logo w-full dark:hidden"
-                    />
-                    <Image
-                      src={`/images/logo/logo-white.svg`}
-                      alt="logo"
-                      width={240}
-                      height={30}
-                      className="header-logo hidden w-full dark:block"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Image
-                      src={`${
-                        sticky
-                          ? "/images/logo/logo.svg"
-                          : "/images/logo/logo-white.svg"
-                      }`}
-                      alt="logo"
-                      width={140}
-                      height={30}
-                      className="header-logo w-full dark:hidden"
-                    />
-                    <Image
-                      src={"/images/logo/logo-white.svg"}
-                      alt="logo"
-                      width={140}
-                      height={30}
-                      className="header-logo hidden w-full dark:block"
-                    />
-                  </>
-                )}
-              </Link>
+                <span>FamConnect</span>
+               
+              </span>
+            </Link>
+
+
+
             </div>
             <div className="flex w-full items-center justify-between px-4">
               <div>
