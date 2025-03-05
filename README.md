@@ -1,93 +1,57 @@
-Play Next.js is a free and **Open-source SaaS starter kit and boilerplate, designed and built for SaaS startups**, apps, businesses, and more. With its premium design and essential UI components and pages, it provides everything you need to kickstart a feature-rich SaaS website.
+### project name: 
+
+Family Connect - A Social Family Management Platform 👨‍👩‍👧‍👦
+
+![alt text](family.png)
+
+### project description: 
+
+Family Connect is a Next.js-based web application designed to help families stay connected. It allows families to write posts, create events, share photos, and offers an admin section for managing users and content. Whether it's for organizing gatherings or sharing family memories, Family Connect makes communication and planning effortless.
+
+### Key Features 🚀
+
+1. Post Writing: Family members can write and share posts with others in the family.
+2. Event Creation: Organize and manage family events, with easy sharing and updates.
+3. Photo Sharing: Upload and view photos with Cloudinary integration.
+4. User Roles: Parents have full control of the platform, while children have limited access.
+5. Admin Panel: Admin users have the ability to manage users, posts, events, and photos.
+6. Admin Controls: Admins can add, update, or delete posts and events, as well as control user permissions.
+
+### Tech Stack ⚙️
+
+1. Frontend: Built with Next.js, using Tailwind CSS for styling.
+2. Backend: PostgreSQL for secure data storage.
+3. Deployment: Hosted on Vercel for fast and reliable performance.
+4. Authentication: Secure login with NextAuth.
+5. Cloudinary: Used for storing and managing photos uploaded by users.
+
+### 🚀 View Live Demo
+
+https://webd3031-project-famlilyconnect.vercel.app/
 
 
-[![Play Next.js](https://github.com/NextJSTemplates/play-nextjs/blob/main/nextjs-play.png)](https://play.nextjstemplates.com)
+### 🔌 Documentation
 
-## Free SaaS Boilerplate and Starter Kit for Next.js 🚀
-Play Next.js SaaS Boilerplate and Starter Kit is a free, open-source solution ideal for startups, SaaS companies, and more. It offers essential UI components, authentication and database integration, and Stripe integration. Its superior design and functionality make it a go-to choice for launching a feature-rich SaaS website efficiently.
-
-### [🚀 View Live Demo](https://play.nextjstemplates.com/)
-
-### [🔌 Documentation](https://nextjstemplates.com/docs)
-
-### All Essential Integrations - DB, Auth, Payment, MDX, and more ⚡
-Play Next.js SaaS Starter kit includes all the key integrations required to build a fully functional SaaS platform.
-
-- **PostgreSQL for Database**: Comes with PostgreSQL integration with Prisma which is a powerful and open-source relational database system ensures data integrity and reliability.
-
-- **NextAuth for Authentication**: Play Next.js utilizes NextAuth, a versatile solution that provides secure login and user management.
-
-- **MDX for Blogs**: MDX uniquely combines Markdown and JSX, Play Next.js comes with complete blogging solution to create and maintain blog using MDX.
-
-- **Stripe for Subscription Payments**: Stripe, a globally trusted payment processing platform, offers robust security features and smooth checkout experiences.
-
-These integrations work together to simplify development and enhance the user experience.
-
-### Essential SaaS Pages & Components and Styled Using Tailwind CSS 🎨
-This Next.js SaaS Boilerplate and Starter Kit is **styled using Tailwind CSS**, a highly flexible and customizable utility-first CSS framework. Leveraging the power of Tailwind, each component and page of this kit, including **login, signup, blog, about, and others, has been handcrafted to offer top-notch aesthetics** while maintaining peak usability. 
-
-### Crafted Using [🎨 TailGrids Components](https://tailgrids.com)
-
-Play Next.js SaaS boilerplate, you can enjoy a professional-looking website that offers seamless operation, all while significantly reducing your web development time and effort.
-___
-
-### 🚀 Deploy Now
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNextJSTemplates%2Fplay-nextjs)
-
-[![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/NextJSTemplates/play-nextjs)
+1. Home Page: Welcomes users with a clean, family-oriented interface.
+2. Post Area: A space for families to share thoughts, ideas, and updates.
+3. Event Calendar: A shared calendar to help plan and manage family events.
+4. Photo Album: A photo gallery to store and view family pictures.
+5. Admin Panel: A dashboard where admins can manage users, posts, events, and photos.
 
 ### Setup Instructions
 
-Follow these steps to set up and run this template on your local machine:
+To run this project locally:
 
-1. Begin by downloading and extracting the template from **Next.js Templates**.
+1. Clone the repository:
 
-2. Once you've done that, navigate into the template directory using the **cd** command.
+   git clone https://github.com/NSCC-ITC-Winter2025-WEBD3031-700-MCa/webd3031-project-famlilyconnect.git
 
-3. Install the necessary dependencies by running the following commands:
+2. pnpm install 
+3. pnpm run dev
+4. Access the app on [localhost:3000](http://localhost:3000/).
 
-```bash
-    npm install --legacy-peer-deps
-```
-**Note:** As of right now React 19 causes peer dependencies issues with some packages, so the `legacy-peer-deps` flag is required.
+License Information
+Family Connect is completely free and open-source. Feel free to use it for both personal and commercial projects.
 
-4. Now you're ready to start the project on your local server. Use the following command to get it up and running:
-
-```bash
-    npm run dev
- ```
-
-This will launch the template on [localhost:3000](http://localhost:3000).
-
-Our comprehensive documentation includes all the guides you'll need for integrating various features.
-
-### Deployment on PaaS
-
-If your project is hosted on a GitHub repository, you can deploy it using free and user-friendly platforms like [Vercel](https://vercel.com/) or [Netlify](https://netlify.com/). Both provide generous free tiers for hosting Next.js projects.
-
-### License Information
-Play is Free is completely free and open-source. Feel free to use it for both personal and commercial projects.
-
-### Show Your Support
-If you appreciate this project, please consider starring this repository. Your support encourages our team to continue creating more content like this and helps us to reach more users like you!
-
-## Explore More Templates
-For a wider range of options, feel free to browse our collection of [Next.js Templates, Boilerplates and Starter Kits](https://nextjstemplates.com/templates).
-
-### Update Log
-**29 Jan 2025**
-- Upgraded to Next.js 15
-- Using `Link` instead of `a` tag
-- Fixed all minor bugs
-
-  
-**21 March 2024**
-- Upgraded to Next.js 14
-- Updated stripe integration
-- Fixed auth issues
-- Updated all the packages
-- Update ts config & fix all the issues
-- Update signin & signup page Design
-- Integrated Magic link signin
-- & Forgot password
+Show Your Support
+If you appreciate this project, please consider starring the repository! Your support helps us to continue creating more features and improve the platform.
