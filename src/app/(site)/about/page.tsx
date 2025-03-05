@@ -4,9 +4,10 @@ import Team from "@/components/Team";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title:
-    "About Us | Play SaaS Starter Kit and Boilerplate for Next.js",
-  description: "This is About page description",
+  
+  title: "About Us | Family Connect – Bringing Loved Ones Closer",  
+  description: "Learn more about Family Connect, a social family management platform designed to help families share moments, plan events, and stay connected effortlessly."  
+  
 };
 
 const AboutPage = () => {
