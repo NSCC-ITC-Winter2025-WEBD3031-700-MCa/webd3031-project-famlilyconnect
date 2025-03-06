@@ -19,10 +19,10 @@ const Pricing = () => {
           />
         </div>
 
-        <div className="-mx-4 flex flex-wrap justify-center">
+        <div className="flex flex-col items-center gap-10 md:flex-row md:justify-center">
           {pricingData.map((product, i) => (
             <PricingBox key={i} product={product} />
-          ))}     
+          ))}
         </div>
       </div>
     </section>

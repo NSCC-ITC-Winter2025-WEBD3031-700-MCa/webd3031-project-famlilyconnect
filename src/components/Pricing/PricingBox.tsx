@@ -32,6 +32,11 @@ const PricingBox = ({ product }: { product: Price }) => {
             Recommended
           </p>
         )}
+        {product.nickname === "Basic" && (
+          <p className="absolute right-[-10px] top-[20px] inline-block -rotate-90 rounded-bl-md rounded-tl-md bg-green-500 px-5 py-2 text-base font-medium text-white">
+            Free
+          </p>
+        )}
         <span className="mb-5 block text-xl font-medium text-dark dark:text-white">
           {product.nickname}
         </span>
