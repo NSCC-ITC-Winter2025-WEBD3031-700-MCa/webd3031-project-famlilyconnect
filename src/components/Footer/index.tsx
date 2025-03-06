@@ -13,21 +13,20 @@ const Footer = () => {
             <div className="mb-10 w-full">
               <Link href="/" className="mb-6 inline-block max-w-[160px]">
                 <Image
-                  src="/images/logo/logo-white.svg"
+                  src="/images/logo/family_white.png"
                   alt="logo"
-                  width={140}
-                  height={30}
+                  width={100}
+                  height={100}
                   className="max-w-full"
                 />
               </Link>
               <p className="mb-8 max-w-[270px] text-base text-gray-7">
-                We create digital experiences for brands and companies by using
-                technology.
+                Family Connect – Bringing Loved Ones Closer, One Moment at a Time.💙👨‍👩‍👧‍👦✨
               </p>
               <div className="-mx-3 flex items-center">
                 <Link
                   aria-label="social link"
-                  href="#"
+                  href="https://www.facebook.com/"
                   className="px-3 text-gray-7 hover:text-white"
                 >
                   <svg
@@ -43,7 +42,7 @@ const Footer = () => {
                 </Link>
                 <Link
                   aria-label="social link"
-                  href="#"
+                  href="https://x.com/home"
                   className="px-3 text-gray-7 hover:text-white"
                 >
                   <svg
@@ -59,7 +58,7 @@ const Footer = () => {
                 </Link>
                 <Link
                   aria-label="social link"
-                  href="#"
+                  href="https://www.instagram.com/"
                   className="px-3 text-gray-7 hover:text-white"
                 >
                   <svg
@@ -77,7 +76,7 @@ const Footer = () => {
                 </Link>
                 <Link
                   aria-label="social link"
-                  href="#"
+                  href="https://www.linkedin.com/"
                   className="px-3 text-gray-7 hover:text-white"
                 >
                   <svg
@@ -102,40 +101,40 @@ const Footer = () => {
               <ul>
                 <li>
                   <Link
-                    href="#"
+                    href="/"
                     className="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
                     Home
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
-                    href="#"
+                    href="/"
                     className="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
                     Features
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
-                    href="#"
+                    href="/about"
                     className="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
                     About
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="#"
                     className="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
                     Testimonial
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
-          <div className="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-3/12 xl:w-2/12">
+          {/* <div className="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-3/12 xl:w-2/12">
             <div className="mb-10 w-full">
               <h4 className="mb-9 text-lg font-semibold text-white">
                 Features
@@ -175,13 +174,13 @@ const Footer = () => {
                 </li>
               </ul>
             </div>
-          </div>
+          </div> */}
           <div className="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-3/12 xl:w-2/12">
             <div className="mb-10 w-full">
               <h4 className="mb-9 text-lg font-semibold text-white">
                 Our Products
               </h4>
-              <ul>
+              {/* <ul>
                 <li>
                   <Link
                     href="#"
@@ -214,7 +213,7 @@ const Footer = () => {
                     PlainAdmin
                   </Link>
                 </li>
-              </ul>
+              </ul> */}
             </div>
           </div>
           <div className="w-full px-4 md:w-2/3 lg:w-6/12 xl:w-3/12">
@@ -247,14 +246,14 @@ const Footer = () => {
                     Support
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="#"
                     className="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
                     About
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
@@ -298,7 +297,7 @@ const Footer = () => {
                     target="_blank"
                     className="text-gray-1 hover:underline"
                   >
-                    TailGrids and Next.js Templates
+                    Team Family Connect
                   </Link>
                 </p>
               </div>
