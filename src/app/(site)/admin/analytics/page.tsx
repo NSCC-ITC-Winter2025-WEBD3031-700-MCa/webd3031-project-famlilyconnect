@@ -42,7 +42,7 @@ const data03 = [
 export default function Analytics() {
   return (
     <div className="ps-2 pt-5">
-      <div className="px-28 py-10 border rounded-lg shadow-1">
+      <div className="px-24 py-10 border rounded-lg shadow-1">
         {/* bar chart  */}
         <h1 className="text-[28px] font-bold">Analytics</h1>
         <Card className="p-4">

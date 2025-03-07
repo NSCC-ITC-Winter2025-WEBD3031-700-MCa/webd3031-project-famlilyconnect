@@ -12,17 +12,16 @@ import { useEffect, useState } from "react";
 import PreLoader from "@/components/Common/PreLoader";
 import { usePathname } from "next/navigation";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
-  const pathname = usePathname(); // Get the current route
+  const pathname = usePathname();
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
+
+  // Check if it's an admin page
+  const isAdminRoute = pathname.startsWith("/admin");
 
   return (
     <html suppressHydrationWarning={true} className="!scroll-smooth" lang="en">
@@ -32,16 +31,14 @@ export default function RootLayout({
           <PreLoader />
         ) : (
           <SessionProvider>
-            <ThemeProvider
-              attribute="class"
-              enableSystem={false}
-              defaultTheme="light"
-            >
+            <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
               <ToasterContext />
-              {/* Hide Header on /admin routes */}
-              {!pathname.startsWith("/admin") && <Header />}
+              
+              {/* Show header & footer only if NOT an admin route */}
+              {!isAdminRoute && <Header />}
               {children}
-              <Footer />
+              {!isAdminRoute && <Footer />}
+              
               <ScrollToTop />
             </ThemeProvider>
           </SessionProvider>

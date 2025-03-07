@@ -53,6 +53,24 @@ const members = [
     username: "JohnDoe123",
     email: "johndoe@email.com",
   },
+  {
+    firstName: "John",
+    lastName: "Doe",
+    username: "JohnDoe123",
+    email: "johndoe@email.com",
+  },
+  {
+    firstName: "John",
+    lastName: "Doe",
+    username: "JohnDoe123",
+    email: "johndoe@email.com",
+  },
+  {
+    firstName: "John",
+    lastName: "Doe",
+    username: "JohnDoe123",
+    email: "johndoe@email.com",
+  },
 ]
 
 export default function MemberTable() {

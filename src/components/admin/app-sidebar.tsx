@@ -1,5 +1,5 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
-
+import { Calendar, Home, Inbox, Search, Settings, LogOut } from "lucide-react"
+import Link from "next/link"
 import {
   Sidebar,
   SidebarContent,
@@ -16,12 +16,12 @@ import { NavUser } from "./nav-user"
 const items = [
   {
     title: "Dashboard",
-    url: "#",
+    url: "/admin",
     icon: Home,
   },
   {
     title: "Members",
-    url: "#",
+    url: "/admin/members",
     icon: Inbox,
   },
   {
@@ -31,7 +31,7 @@ const items = [
   },
   {
     title: "Analytics",
-    url: "#",
+    url: "/admin/analytics",
     icon: Search,
   },
   {
@@ -39,6 +39,11 @@ const items = [
     url: "#",
     icon: Settings,
   },
+  {
+    title: "Logout",
+    url: "#",
+    icon: LogOut,
+  }
 ]
 
 export function AppSidebar() {
@@ -52,10 +57,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
