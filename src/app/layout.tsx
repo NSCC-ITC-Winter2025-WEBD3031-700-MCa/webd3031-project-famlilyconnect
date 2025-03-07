@@ -10,40 +10,35 @@ import "../styles/prism-vsc-dark-plus.css";
 import ToasterContext from "./api/contex/ToasetContex";
 import { useEffect, useState } from "react";
 import PreLoader from "@/components/Common/PreLoader";
+import { usePathname } from "next/navigation";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
+  // Check if it's an admin page
+  const isAdminRoute = pathname.startsWith("/admin");
+
   return (
     <html suppressHydrationWarning={true} className="!scroll-smooth" lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.js. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
       <head />
-
       <body>
         {loading ? (
           <PreLoader />
         ) : (
           <SessionProvider>
-            <ThemeProvider
-              attribute="class"
-              enableSystem={false}
-              defaultTheme="light"
-            >
+            <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
               <ToasterContext />
-              <Header />
+              
+              {/* Show header & footer only if NOT an admin route */}
+              {!isAdminRoute && <Header />}
               {children}
-              <Footer />
+              {!isAdminRoute && <Footer />}
+              
               <ScrollToTop />
             </ThemeProvider>
           </SessionProvider>
