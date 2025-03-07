@@ -39,7 +39,7 @@ export default function RootLayout({
             >
               <ToasterContext />
               {/* Hide Header on /admin routes */}
-              {pathname !== "/admin" && <Header />} 
+              {!pathname.startsWith("/admin") && <Header />}
               {children}
               <Footer />
               <ScrollToTop />
