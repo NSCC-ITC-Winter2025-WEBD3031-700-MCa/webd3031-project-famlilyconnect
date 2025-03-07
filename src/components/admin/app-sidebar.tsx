@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { NavUser } from "./nav-user"
 
 // Menu items.
 const items = [
@@ -29,7 +30,7 @@ const items = [
     icon: Calendar,
   },
   {
-    title: "Search",
+    title: "Analytics",
     url: "#",
     icon: Search,
   },
@@ -62,6 +63,8 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+    <NavUser user={{ name: "John Doe", email: "john.doe@example.com", avatar: "path/to/avatar.png" }} />
+      
     </Sidebar>
   )
 }
