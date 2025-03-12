@@ -38,7 +38,7 @@ const Signin = () => {
         if (callback?.ok && !callback?.error) {
           toast.success("Login successful");
           setLoading(false);
-          router.push("/");
+          router.push("/family");
         }
       })
       .catch((err) => {
