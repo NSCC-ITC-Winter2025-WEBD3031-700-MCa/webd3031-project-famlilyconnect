@@ -1,17 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-enum Role {
-  admin
-  editor
-  viewer
-}
-
-enum Status {
-  pending
-  completed
-}
-
 datasource db {
   provider          = "postgresql"
   url               = env("DATABASE_URL")
@@ -60,73 +49,6 @@ model User {
   passwordResetTokenExp DateTime?
   accounts              Account[]
   sessions              Session[]
-
-  familyMembers FamilyMember[]
-  posts         Post[]
-  events        Event[]        @relation("UserEvents")
-  photos        Photo[]
-
-  mainFamilyId String?
-  mainFamily   Family?      @relation("MainFamily", fields: [mainFamilyId], references: [id])
-  Invitation   Invitation[]
-}
-
-model FamilyMember {
-  id           String  @id @default(cuid())
-  userId       String
-  familyId     String
-  role         Role    @default(viewer)
-  isMainFamily Boolean @default(false)
-  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  family       Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, familyId])
-}
-
-model Family {
-  id      String         @id @default(cuid())
-  name    String
-  members FamilyMember[]
-  posts   Post[]
-  events  Event[]
-  photos  Photo[]
-
-  mainUsers  User[]       @relation("MainFamily")
-  Invitation Invitation[]
-}
-
-model Post {
-  id        String   @id @default(cuid())
-  content   String
-  authorId  String
-  familyId  String
-  createdAt DateTime @default(now())
-
-  author User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  family Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
-}
-
-model Event {
-  id         String   @id @default(cuid())
-  title      String
-  status     Status   @default(pending)
-  assignedTo String?
-  familyId   String
-  createdAt  DateTime @default(now())
-
-  family Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  user   User?  @relation("UserEvents", fields: [assignedTo], references: [id])
-}
-
-model Photo {
-  id         String   @id @default(cuid())
-  url        String
-  uploaderId String
-  familyId   String
-  createdAt  DateTime @default(now())
-
-  uploader User   @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
-  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -135,20 +57,4 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model Invitation {
-  id         String   @id @default(cuid())
-  email      String
-  inviteCode String   @unique
-  status     Status   @default(pending)
-  familyId   String
-  invitedBy  String
-  createdAt  DateTime @default(now())
-  expiresAt  DateTime
-
-  family  Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  inviter User   @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
-
-  @@unique([email, familyId])
 }

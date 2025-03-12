@@ -5,7 +5,7 @@ const SocialSignIn = () => {
   return (
     <>
       <button
-        onClick={() => signIn("google", { callbackUrl: "/family" })}
+        onClick={() => signIn("google")}
         className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-gray-4 p-3.5 text-dark duration-200 ease-in hover:border-gray-5 hover:bg-gray dark:border-dark-3 dark:text-white dark:hover:bg-dark-3"
       >
         <svg
@@ -48,7 +48,7 @@ const SocialSignIn = () => {
       </button>
 
       <button
-        onClick={() => signIn("github", { callbackUrl: "/family" })}
+        onClick={() => signIn("github")}
         className="mt-4 flex w-full items-center justify-center gap-2.5 rounded-lg border border-gray-4 p-3.5 text-dark duration-200 ease-in hover:border-gray-5 hover:bg-gray dark:border-dark-3 dark:text-white dark:hover:bg-dark-3"
       >
         <svg

@@ -12,12 +12,13 @@ const Header = () => {
   const { data: session } = useSession();
 
   const pathUrl = usePathname();
-
+  // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen);
   };
 
+  // Sticky Navbar
   const [sticky, setSticky] = useState(false);
   const handleStickyNavbar = () => {
     if (window.scrollY >= 80) {
@@ -30,7 +31,7 @@ const Header = () => {
     window.addEventListener("scroll", handleStickyNavbar);
   });
 
- 
+  // submenu handler
   const [openIndex, setOpenIndex] = useState(-1);
   const handleSubmenu = (index: any) => {
     if (openIndex === index) {
@@ -279,21 +280,21 @@ const Header = () => {
                   <>
                     <p
                       className={`loginBtn px-7 py-3 text-base font-medium ${
-                        !sticky && pathUrl === "/" ? "text-white" : "text-dark dark:text-white"
+                        !sticky && pathUrl === "/" ? "text-white" : "text-dark"
                       }`}
                     >
                       {session?.user?.name}
                     </p>
                     {pathUrl !== "/" || sticky ? (
                       <button
-                        onClick={() => signOut({ callbackUrl: "/" })} 
+                        onClick={() => signOut()}
                         className="signUpBtn rounded-lg bg-primary bg-opacity-100 px-6 py-3 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-20 hover:text-dark"
                       >
                         Sign Out
                       </button>
                     ) : (
                       <button
-                        onClick={() => signOut({ callbackUrl: "/" })}
+                        onClick={() => signOut()}
                         className="signUpBtn rounded-lg bg-white bg-opacity-20 px-6 py-3 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark"
                       >
                         Sign Out

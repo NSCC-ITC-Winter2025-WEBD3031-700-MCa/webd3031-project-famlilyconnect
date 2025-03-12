@@ -24,7 +24,6 @@ const MagicLink = () => {
       signIn("email", {
         redirect: false,
         email: email,
-        callbackUrl: "/family",
       })
         .then((callback) => {
           if (callback?.ok) {

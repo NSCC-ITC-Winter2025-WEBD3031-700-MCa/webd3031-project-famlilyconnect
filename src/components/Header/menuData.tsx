@@ -31,12 +31,6 @@ const menuData: Menu[] = [
     path: "/blogs",
     newTab: false,
   },
-  {
-    id: 7,
-    title: "Family",
-    path: "/family",
-    newTab: false,
-  },
   // {
   //   id: 6,
   //   title: "Pages",
