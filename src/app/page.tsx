@@ -14,8 +14,12 @@ import { getAllPosts } from "@/utils/markdown";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Play Next.js - SaaS Starter Kit and Boilerplate for Next.js",
+  title: "Family Connect - Bringing Loved Ones Closer, One Moment at a Time.",
   description: "Free Next.js SaaS Boilerplate and Starter Kit designed and built for SaaS startups. It comes with all necessary integrations, pages, and components you need to launch a feature-rich SaaS websites.",
+  icons: 
+  {
+    icon: "images/favicon.ico",
+  }
 };
 
 export default function Home() {
