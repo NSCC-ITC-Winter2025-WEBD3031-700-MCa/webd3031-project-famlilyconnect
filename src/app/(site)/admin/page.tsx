@@ -1,8 +1,16 @@
+'use client';
+
 import { Card } from "@/components/ui/card"
 import { UserEngagementCard } from "@/components/admin/user-engagement"
 import { TrafficPatternsCard } from "@/components/admin/traffic-patterns"
+import useAuth from "@/hooks/useAuth"
+import { getSession } from "@/lib/session"
 
 export default function Dashboard() {
+
+    const isAuthenticated = !!getSession();
+    useAuth(isAuthenticated);
+
   return (
     <div className="ps-10 pt-5">
       <div className="px-28 py-10 border rounded-lg shadow-1">
