@@ -152,3 +152,9 @@ model Invitation {
 
   @@unique([email, familyId])
 }
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
