@@ -11,6 +11,7 @@ import ToasterContext from "./api/contex/ToasetContex";
 import { useEffect, useState } from "react";
 import PreLoader from "@/components/Common/PreLoader";
 import { usePathname } from "next/navigation";
+import { UserProvider } from "@/context/UserContext";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,16 +32,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PreLoader />
         ) : (
           <SessionProvider>
-            <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
-              <ToasterContext />
-              
-              {/* Show header & footer only if NOT an admin route */}
-              {!isAdminRoute && <Header />}
-              {children}
-              {!isAdminRoute && <Footer />}
-              
-              <ScrollToTop />
-            </ThemeProvider>
+            <UserProvider>
+              <ThemeProvider attribute="class" enableSystem={false} defaultTheme="light">
+                <ToasterContext />
+                
+                {/* Show header & footer only if NOT an admin route */}
+                {!isAdminRoute && <Header />}
+                {children}
+                {!isAdminRoute && <Footer />}
+                
+                <ScrollToTop />
+              </ThemeProvider>
+            </UserProvider>
           </SessionProvider>
         )}
       </body>
