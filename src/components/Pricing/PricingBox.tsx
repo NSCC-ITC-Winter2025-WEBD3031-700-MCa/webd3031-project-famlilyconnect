@@ -4,22 +4,41 @@ import OfferList from "./OfferList";
 import { Price } from "@/types/price";
 
 const PricingBox = ({ product }: { product: Price }) => {
-  // POST request
   const handleSubscription = async (e: any) => {
     e.preventDefault();
-    const { data } = await axios.post(
-      "/api/payment",
-      {
-        priceId: product.id,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    window.location.assign(data);
+    try {
+      const response = await axios.post(
+        "/api/payment",
+        { priceId: product.id },
+        { headers: { "Content-Type": "application/json" } }
+      );
+  
+      // Make sure we get the session URL
+      if (response.data.url) {
+        window.location.assign(response.data.url); // Redirect to Stripe Checkout
+      } else {
+        console.error("Error: No URL received from the server", response.data);
+      }
+    } catch (error) {
+      console.error("Payment Error:", error);
+    }
   };
+  // // POST request
+  // const handleSubscription = async (e: any) => {
+  //   e.preventDefault();
+  //   const { data } = await axios.post(
+  //     "/api/payment",
+  //     {
+  //       priceId: product.id,
+  //     },
+  //     {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     },
+  //   );
+  //   window.location.assign(data);
+  // };
 
   return (
     <div className="w-full px-4 md:w-1/2 lg:w-1/3">
