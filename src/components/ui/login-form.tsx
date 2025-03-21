@@ -20,15 +20,10 @@ export function LoginForm({
     e.preventDefault();
     
     try {
-      const response = await axios.post("/api/adminLogin/route", {
+      const response = await axios.post("/api/adminlogin/", {
         username,
         password,
       });
-
-      const { token } = response.data;
-
-      // Store the JWT token (in a cookie or localStorage)
-      document.cookie = `token=${token}; path=/`;
 
       // Redirect to the admin page
       router.push("/admin");

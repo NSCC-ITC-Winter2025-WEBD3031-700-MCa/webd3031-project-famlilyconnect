@@ -1,44 +1,41 @@
-// pages/api/adminLogin/route.ts
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-
-
 const prisma = new PrismaClient();
 
-type Data = {
-  message: string;
-  token?: string;
-};
+export async function POST(req: NextRequest) {
+  const { username, password } = await req.json();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method Not Allowed' });
+  const user = await prisma.user.findFirst({ where: { role: 'admin' } });
+
+  if (!user) {
+    return NextResponse.json({ message: 'Admin not found' }, { status: 400 });
   }
 
-  const { username, password } = req.body;
-
-  // Find the admin by username
-  const admin = await prisma.admin.findUnique({ where: { username } });
-
-  if (!admin) {
-    return res.status(400).json({ message: 'Admin not found' });
+  if (!user.password) {
+    return NextResponse.json({ message: 'Invalid credentials' }, { status: 400 });
   }
 
-  // Compare the password with the hashed password in the database
-  const isMatch = await bcrypt.compare(password, admin.password);
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(400).json({ message: 'Invalid credentials' });
+    return NextResponse.json({ message: 'Invalid credentials' }, { status: 400 });
   }
 
-  // Create a JWT token
   const token = jwt.sign(
-    { id: admin.id, username: admin.username, role: 'admin' },
-    process.env.JWT_SECRET || 'your-secret-key', // Use an environment variable for the secret
+    { id: user.id, username: user.name, role: 'admin' },
+    process.env.JWT_SECRET || 'your-secret-key',
     { expiresIn: '1h' }
   );
 
-  return res.status(200).json({ message: 'Login successful', token });
+  const response = NextResponse.json({ message: 'Login successful' });
+  response.cookies.set('token', token, { 
+    httpOnly: true, 
+    path: '/', 
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'strict' 
+  });
+
+  return response;
 }

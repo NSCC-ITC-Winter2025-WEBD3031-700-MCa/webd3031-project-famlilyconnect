@@ -17,6 +17,7 @@ export async function middleware(req: NextRequest) {
     if (!token) {
       return NextResponse.redirect(new URL('/signin', req.url));
     }
+ 
   }
 
   return NextResponse.next();
@@ -24,5 +25,5 @@ export async function middleware(req: NextRequest) {
 
 
 export const config = {
-  matcher: ['/family/:path*', ],
+  matcher: ['/family/:path*', '/admin/:path*' ],
 };

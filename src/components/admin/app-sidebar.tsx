@@ -68,7 +68,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-    <NavUser user={{ name: "John Doe", email: "john.doe@example.com", avatar: "path/to/avatar.png" }} />
+    <NavUser user={{ name: "John Doe", email: "john.doe@example.com",}} />
       
     </Sidebar>
   )
