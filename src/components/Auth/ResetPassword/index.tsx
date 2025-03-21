@@ -67,7 +67,7 @@ const ResetPassword = ({ token }: { token: string }) => {
       if (res.status === 200) {
         toast.success(res.data);
         setData({ newPassword: "", ReNewPassword: "" });
-        router.push("/signin");
+        router.push("/");
       }
 
       setLoader(false);

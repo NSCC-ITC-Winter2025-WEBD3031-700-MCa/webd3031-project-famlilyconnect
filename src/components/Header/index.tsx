@@ -5,19 +5,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { useUserContext } from "@/context/UserContext";
 import menuData from "./menuData";
 
 const Header = () => {
   const { data: session } = useSession();
-
   const pathUrl = usePathname();
 
+  const { username, userEmail } = useUserContext();
+
+  
+  // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen);
   };
 
+  // Sticky Navbar
   const [sticky, setSticky] = useState(false);
   const handleStickyNavbar = () => {
     if (window.scrollY >= 80) {
@@ -30,7 +34,8 @@ const Header = () => {
     window.addEventListener("scroll", handleStickyNavbar);
   });
 
- 
+
+  // submenu handler
   const [openIndex, setOpenIndex] = useState(-1);
   const handleSubmenu = (index: any) => {
     if (openIndex === index) {
@@ -54,42 +59,41 @@ const Header = () => {
         <div className="container">
           <div className="relative -mx-4 flex items-center justify-between">
             <div className="w-60 max-w-full px-4">
-            <Link
-              href="/"
-              className={`navbar-logo flex items-end gap-2 ${
-                sticky ? "py-2" : "py-5"
-              }`}
-            >
-              <div className="w-12 md:w-14 flex-shrink-0">
-                <Image
-                  src={sticky ? "/images/logo/family.png" : "/images/logo/family_white.png"}
-                  alt="logo"
-                  width={sticky ? 48 : 56}  
-                  height={sticky ? 48 : 56}
-                  className="header-logo dark:hidden"
-                />
-                <Image
-                  src={"/images/logo/family_white.png"}
-                  alt="logo"
-                  width={sticky ? 48 : 56}
-                  height={sticky ? 48 : 56}
-                  className="header-logo hidden dark:block"
-                />
-              </div>
-
-              <span
-                className={`hidden sm:flex gap-1 font-semibold tracking-wide transition-all whitespace-nowrap ${
-                  sticky ? "text-lg md:text-xl text-gray-900 dark:text-white" 
-                        : "text-xl md:text-2xl text-gray-100 dark:text-gray-300"
+              <Link
+                href="/"
+                className={`navbar-logo flex items-end gap-2 ${
+                  sticky ? "py-2" : "py-5"
                 }`}
               >
-                <span>FamConnect</span>
-               
-              </span>
-            </Link>
+                <div className="w-12 md:w-14 flex-shrink-0">
+                  <Image
+                    src={sticky ? "/images/logo/family.png" : "/images/logo/family_white.png"}
+                    alt="logo"
+                    width={sticky ? 48 : 56}  
+                    height={sticky ? 48 : 56}
+                    className="header-logo dark:hidden"
+                  />
+                  <Image
+                    src={"/images/logo/family_white.png"}
+                    alt="logo"
+                    width={sticky ? 48 : 56}
+                    height={sticky ? 48 : 56}
+                    className="header-logo hidden dark:block"
+                  />
+                </div>
 
-
-
+                <span
+                  className={`hidden sm:flex gap-1 font-semibold tracking-wide transition-all whitespace-nowrap ${
+                    sticky 
+                      ? "text-lg md:text-xl text-gray-900 dark:text-white" 
+                      : pathUrl === "/" 
+                        ? "text-xl md:text-2xl text-gray-100 dark:text-gray-300"
+                        : "text-xl md:text-2xl text-gray-900 dark:text-gray-300"
+                  }`}
+                >
+                  <span>FamConnect</span>
+                </span>
+              </Link>
             </div>
             <div className="flex w-full items-center justify-between px-4">
               <div>
@@ -129,13 +133,13 @@ const Header = () => {
                 </button>
                 <nav
                   id="navbarCollapse"
-                  className={`navbar absolute right-0 z-30 w-[250px] rounded border-[.5px] border-body-color/50 bg-white px-6 py-4 duration-300 dark:border-body-color/20 dark:bg-dark-2 lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100 lg:dark:bg-transparent ${
+                  className={`navbar absolute z-30 w-[94%] mx-auto left-0 right-0 rounded-xl border-[.5px] border-body-color/10 bg-white px-6 py-4 duration-300 dark:border-body-color/20 dark:bg-dark-2 lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100 lg:dark:bg-transparent ${
                     navbarOpen
                       ? "visibility top-full opacity-100"
                       : "invisible top-[120%] opacity-0"
                   }`}
                 >
-                  <ul className="block lg:ml-8 lg:flex lg:gap-x-8 xl:ml-14 xl:gap-x-12">
+                  <ul className="block divide-y divide-gray-100 dark:divide-gray-800 lg:ml-8 lg:flex lg:gap-x-8 lg:divide-y-0 xl:ml-14 xl:gap-x-12">
                     {menuData.map((menuItem, index) =>
                       menuItem.path ? (
                         <li key={index} className="group relative">
@@ -144,7 +148,7 @@ const Header = () => {
                               onClick={navbarToggleHandler}
                               scroll={false}
                               href={menuItem.path}
-                              className={`ud-menu-scroll flex py-2 text-base text-dark group-hover:text-primary dark:text-white dark:group-hover:text-primary lg:inline-flex lg:px-0 lg:py-6 ${
+                              className={`ud-menu-scroll flex py-3 text-base text-dark group-hover:text-primary dark:text-white dark:group-hover:text-primary lg:inline-flex lg:px-0 lg:py-6 ${
                                 pathUrl === menuItem?.path && "text-primary"
                               }`}
                             >
@@ -154,7 +158,7 @@ const Header = () => {
                             <Link
                               scroll={false}
                               href={menuItem.path}
-                              className={`ud-menu-scroll flex py-2 text-base lg:inline-flex lg:px-0 lg:py-6 ${
+                              className={`ud-menu-scroll flex py-3 text-base lg:inline-flex lg:px-0 lg:py-6 ${
                                 sticky
                                   ? "text-dark group-hover:text-primary dark:text-white dark:group-hover:text-primary"
                                   : "text-body-color dark:text-white lg:text-white"
@@ -173,13 +177,15 @@ const Header = () => {
                           {pathUrl !== "/" ? (
                             <button
                               onClick={() => handleSubmenu(index)}
-                              className={`ud-menu-scroll flex items-center justify-between py-2 text-base text-dark group-hover:text-primary dark:text-white dark:group-hover:text-primary lg:inline-flex lg:px-0 lg:py-6`}
+                              className={`ud-menu-scroll flex w-full items-center justify-between py-3 text-base text-dark group-hover:text-primary dark:text-white dark:group-hover:text-primary lg:inline-flex lg:px-0 lg:py-6`}
                             >
                               {menuItem.title}
 
                               <span className="pl-1">
                                 <svg
-                                  className={`duration-300 lg:group-hover:rotate-180`}
+                                  className={`duration-300 lg:group-hover:rotate-180 ${
+                                    openIndex === index ? "rotate-180" : ""
+                                  }`}
                                   width="16"
                                   height="17"
                                   viewBox="0 0 16 17"
@@ -196,7 +202,7 @@ const Header = () => {
                           ) : (
                             <button
                               onClick={() => handleSubmenu(index)}
-                              className={`ud-menu-scroll flex items-center justify-between py-2 text-base lg:inline-flex lg:px-0 lg:py-6 ${
+                              className={`ud-menu-scroll flex w-full items-center justify-between py-3 text-base lg:inline-flex lg:px-0 lg:py-6 ${
                                 sticky
                                   ? "text-dark group-hover:text-primary dark:text-white dark:group-hover:text-primary"
                                   : "text-white"
@@ -206,7 +212,9 @@ const Header = () => {
 
                               <span className="pl-1">
                                 <svg
-                                  className={`duration-300 lg:group-hover:rotate-180`}
+                                  className={`duration-300 lg:group-hover:rotate-180 ${
+                                    openIndex === index ? "rotate-180" : ""
+                                  }`}
                                   width="16"
                                   height="17"
                                   viewBox="0 0 16 17"
@@ -223,17 +231,20 @@ const Header = () => {
                           )}
 
                           <div
-                            className={`submenu relative left-0 top-full w-[250px] rounded-sm bg-white p-4 transition-[top] duration-300 group-hover:opacity-100 dark:bg-dark-2 lg:invisible lg:absolute lg:top-[110%] lg:block lg:opacity-0 lg:shadow-lg lg:group-hover:visible lg:group-hover:top-full ${
-                              openIndex === index ? "!-left-[25px]" : "hidden"
+                            className={`submenu relative left-0 top-full w-full rounded-lg bg-white p-4 transition-all duration-300 ease-in-out group-hover:opacity-100 dark:bg-dark-2 lg:invisible lg:absolute lg:w-[250px] lg:top-[110%] lg:block lg:opacity-0 lg:shadow-lg lg:group-hover:visible lg:group-hover:top-full ${
+                              openIndex === index 
+                                ? "block opacity-100 !static lg:!-left-[0]" 
+                                : "hidden opacity-0"
                             }`}
                           >
                             {menuItem?.submenu?.map((submenuItem: any, i) => (
                               <Link
                                 href={submenuItem.path}
                                 key={i}
-                                className={`block rounded px-4 py-[10px] text-sm ${
+                                onClick={navbarToggleHandler}
+                                className={`block rounded px-4 py-[10px] text-sm transition-colors hover:bg-gray-50 dark:hover:bg-dark-3 ${
                                   pathUrl === submenuItem.path
-                                    ? "text-primary"
+                                    ? "text-primary bg-gray-50 dark:bg-dark-3"
                                     : "text-body-color hover:text-primary dark:text-dark-6 dark:hover:text-primary"
                                 }`}
                               >
@@ -243,6 +254,47 @@ const Header = () => {
                           </div>
                         </li>
                       ),
+                    )}
+                    
+                    {/* Add username and logout to mobile menu */}
+                    {session?.user && (
+                      <>
+                        <li className="lg:hidden pt-2">
+                          <Link
+                            href={`/profile/${(session?.user as { id?: string })?.id}`}
+                            onClick={navbarToggleHandler}
+                            className="ud-menu-scroll flex items-center py-3 text-base text-dark hover:text-primary dark:text-white dark:hover:text-primary"
+                          >
+                            <span className="bg-primary/10 dark:bg-white/10 rounded-full p-2 mr-3 flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary dark:text-white">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                              </svg>
+                            </span>
+                            <span className="truncate max-w-[200px]">
+                              {username || userEmail}
+                            </span>
+                          </Link>
+                        </li>
+                        <li className="lg:hidden">
+                          <button
+                            onClick={() => {
+                              navbarToggleHandler();
+                              signOut();
+                            }}
+                            className="ud-menu-scroll flex w-full items-center py-3 text-base text-dark hover:text-primary dark:text-white dark:hover:text-primary"
+                          >
+                            <span className="bg-red-50 dark:bg-red-900/20 rounded-full p-2 mr-3 flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500 dark:text-red-400">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                              </svg>
+                            </span>
+                            Sign Out
+                          </button>
+                        </li>
+                      </>
                     )}
                   </ul>
                 </nav>
@@ -278,22 +330,26 @@ const Header = () => {
                 {session?.user ? (
                   <>
                     <p
-                      className={`loginBtn px-7 py-3 text-base font-medium ${
-                        !sticky && pathUrl === "/" ? "text-white" : "text-dark dark:text-white"
-                      }`}
-                    >
-                      {session?.user?.name}
+                        className={`loginBtn px-7 py-3 text-base font-medium ${
+                          !sticky && pathUrl === "/" 
+                            ? "text-white dark:text-white" 
+                            : "text-dark dark:text-white"
+                        }`}
+                      >
+                      <Link href={`/profile/${(session?.user as { id?: string })?.id}`}>
+                        {username || userEmail}
+                      </Link>
                     </p>
                     {pathUrl !== "/" || sticky ? (
                       <button
-                        onClick={() => signOut({ callbackUrl: "/" })} 
+                        onClick={() => signOut()}
                         className="signUpBtn rounded-lg bg-primary bg-opacity-100 px-6 py-3 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-20 hover:text-dark"
                       >
                         Sign Out
                       </button>
                     ) : (
                       <button
-                        onClick={() => signOut({ callbackUrl: "/" })}
+                        onClick={() => signOut()}
                         className="signUpBtn rounded-lg bg-white bg-opacity-20 px-6 py-3 text-base font-medium text-white duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark"
                       >
                         Sign Out
