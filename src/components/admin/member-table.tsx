@@ -18,7 +18,7 @@ interface User {
   role: string;
 }
 
-export default function userTable() {
+export default function UserTable() {
 
   const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
