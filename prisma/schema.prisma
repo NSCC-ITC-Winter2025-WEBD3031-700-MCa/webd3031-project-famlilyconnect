@@ -60,7 +60,7 @@ model User {
   passwordResetTokenExp DateTime?
   accounts              Account[]
   sessions              Session[]
-
+  role                  String? @default("user")
   familyMembers FamilyMember[]
   posts         Post[]
   events        Event[]        @relation("UserEvents")

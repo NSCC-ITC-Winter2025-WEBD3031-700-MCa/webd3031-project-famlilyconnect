@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 		},
 	});
 
-	const resetURL = `${process.env.SITE_URL}/reset-password/${resetToken}`;
+	const resetURL = `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password/${resetToken}`;
 
 	try {
 		await sendEmail({
