@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -9,99 +10,51 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { ButtonGroup } from "@/components/admin/button-group"
+import { useEffect, useState } from 'react';
 
-const members = [
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-  },
-]
+interface User {
+  name: string;
+  email: string;
+  role: string;
+}
 
-export default function MemberTable() {
+export default function UserTable() {
+
+  const [users, setUsers] = useState<User[]>([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch('/api/members');
+        const data = await res.json();
+        setUsers(data);
+      } catch (err) {
+        console.error('Error fetching members:', err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   return (
     <Table>
-      {/* <TableCaption>A list of your recent members.</TableCaption> */}
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">First Name</TableHead>
-          <TableHead>Last Name</TableHead>
-          <TableHead>Username</TableHead>
+          <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
+          <TableHead>Role</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {members.map((member) => (
-          <TableRow key={member.email}>
-            <TableCell className="font-medium">{member.firstName}</TableCell>
-            <TableCell>{member.lastName}</TableCell>
-            <TableCell>{member.username}</TableCell>
-            <TableCell className="text-right">{member.email}</TableCell>
-            <TableCell className="text-right"><ButtonGroup /></TableCell>
+        {users.map((user: User) => (
+          <TableRow key={user.email}>
+            <TableCell className="font-medium">{user.name}</TableCell>
+            <TableCell className="font-medium">{user.email}</TableCell>
+            <TableCell className="font-medium">{user.role}</TableCell>
+            <TableCell className="font-medium"><ButtonGroup /></TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
-        {/* <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow> */}
       </TableFooter>
     </Table>
   )
