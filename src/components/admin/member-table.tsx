@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -9,37 +10,47 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { ButtonGroup } from "@/components/admin/button-group"
+import { useEffect, useState } from 'react';
 
-const members = [
-  {
-    name: "John Doe",
-    username: "JohnDoe123",
-    email: "johndoe@email.com",
-    role: "User"
-  },
- 
-]
+interface User {
+  name: string;
+  email: string;
+  role: string;
+}
 
-export default function MemberTable() {
+export default function userTable() {
+
+  const [users, setUsers] = useState<User[]>([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch('/api/members');
+        const data = await res.json();
+        setUsers(data);
+      } catch (err) {
+        console.error('Error fetching members:', err);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>First Name</TableHead>
-          <TableHead>Username</TableHead>
+          <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {members.map((member) => (
-          <TableRow key={member.email}>
-            <TableCell className="font-medium">{member.name}</TableCell>
-            <TableCell>{member.username}</TableCell>
-            <TableCell className="text-right">{member.email}</TableCell>
-            <TableCell className="text-right">{member.role}</TableCell>
-            <TableCell className="text-right"><ButtonGroup /></TableCell>
+        {users.map((user: User) => (
+          <TableRow key={user.email}>
+            <TableCell className="font-medium">{user.name}</TableCell>
+            <TableCell className="font-medium">{user.email}</TableCell>
+            <TableCell className="font-medium">{user.role}</TableCell>
+            <TableCell className="font-medium"><ButtonGroup /></TableCell>
           </TableRow>
         ))}
       </TableBody>
