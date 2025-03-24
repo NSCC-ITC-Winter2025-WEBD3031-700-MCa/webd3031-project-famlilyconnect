@@ -1,9 +1,21 @@
 "use client"; 
 
-import { useState, useEffect } from "react";
-import { useParams, notFound } from "next/navigation";
-import Image from "next/image";
-import { User, Calendar, MessageSquare, Image as ImageIcon } from "lucide-react";
+import { Calendar, Image as ImageIcon, MessageSquare, User } from "lucide-react";
+import { notFound, useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import PhotoGallery from "./PhotoGallery";
+import { Photo as PrismaPhoto } from "@prisma/client";
+import { all } from "axios";
+import { set } from "date-fns";
+
+interface Photo extends PrismaPhoto {
+  uploader: {
+    id: string;
+    name: string | null;
+    email: string | null;
+    createdAt: Date;
+  };
+}
 
 const getFamilyDetails = async (id: string) => {
   try {
@@ -22,24 +34,46 @@ const FamilyDetail = () => {
   >("members");
   const [family, setFamily] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [photos, setPhotos] = useState<Photo[]>([]);
 
   const params = useParams();
   const id = params.id as string;
 
-  useEffect(() => {
-    const fetchFamily = async () => {
-      setIsLoading(true);
-      const data = await getFamilyDetails(id);
-      if (!data) {
-        notFound();
-      }
-      setFamily(data);
-      setIsLoading(false);
-    };
-    fetchFamily();
-  }, [id]);
+  const fetchFamily = async () => {
+    setIsLoading(true);
+    const data = await getFamilyDetails(id);
+    if (!data) {
+      notFound();
+    }
+  
+    setFamily(data);
 
-  // Dummy data for demonstration
+    console.log(data);  
+  
+    const allPhotos = data.photos.map((photo: any) => ({
+      ...photo,
+      createdAt: new Date(photo.createdAt),
+      uploader: {
+        id: photo.uploaderId,
+        name: photo.uploader?.name || null,  
+        email: photo.uploader?.email || null, 
+        createdAt: new Date(photo.uploader?.createdAt || photo.createdAt),
+      }
+    }));
+
+    setPhotos(allPhotos)
+
+    setIsLoading(false);
+  };
+
+
+  useEffect(() => {
+   
+    fetchFamily();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  
   const posts = [
     { id: "post1", content: "This is a post from Family A.", author: "Jane Doe", timestamp: "2 days ago" },
     { id: "post2", content: "Another post from Family A.", author: "John Smith", timestamp: "5 days ago" },
@@ -48,30 +82,6 @@ const FamilyDetail = () => {
   const events = [
     { id: "event1", title: "Family Trip", date: "2023-10-15", location: "Beach Resort", attendees: 6 },
     { id: "event2", title: "Birthday Party", date: "2023-11-01", location: "Home", attendees: 12 },
-  ];
-
-  const photos = [
-    {
-      id: "photo1",
-      url: "/images/family/family-create.jpg",
-      description: "Family photo 1",
-      takenBy: "Mom",
-      takenOn: "July 2023"
-    },
-    {
-      id: "photo2",
-      url: "/images/family/family-create.jpg",
-      description: "Family photo 2",
-      takenBy: "Dad", 
-      takenOn: "August 2023"
-    },
-    {
-      id: "photo3",
-      url: "/images/family/family-create.jpg",
-      description: "Family vacation",
-      takenBy: "Uncle Bob",
-      takenOn: "September 2023"
-    },
   ];
 
   if (isLoading) {
@@ -98,6 +108,7 @@ const FamilyDetail = () => {
       <span className="font-medium">{label}</span>
     </button>
   );
+
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20">
@@ -277,7 +288,7 @@ const FamilyDetail = () => {
               )}
 
               {/* Photos Tab */}
-              {activeTab === "photos" && (
+              {/* {activeTab === "photos" && (
                 <section>
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Family Photos</h2>
@@ -312,6 +323,15 @@ const FamilyDetail = () => {
                     ))}
                   </div>
                 </section>
+              )} */}
+
+              {activeTab === "photos" && (
+                <PhotoGallery 
+                  key={family.id}
+                  photos={photos}
+                  familyId={family.id}
+                  fetchFamily = {fetchFamily}
+                />
               )}
             </div>
           </main>

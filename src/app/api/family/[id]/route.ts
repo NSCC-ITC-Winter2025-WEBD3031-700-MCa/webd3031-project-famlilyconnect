@@ -3,7 +3,7 @@ import { prisma } from "@/utils/prismaDB";
 
 export async function GET(req: Request, context: any) {
   try {
-    const { id } = await context.params;
+    const { id } = await context.params; 
 
     const family = await prisma.family.findUnique({
       where: { id: id },
@@ -16,6 +16,17 @@ export async function GET(req: Request, context: any) {
                 name: true,
                 email: true,
                 image: true,
+              },
+            },
+          },
+        },
+        photos: {  
+          include: {
+            uploader: { 
+              select: {
+                id: true,
+                name: true,
+                email: true,
               },
             },
           },
