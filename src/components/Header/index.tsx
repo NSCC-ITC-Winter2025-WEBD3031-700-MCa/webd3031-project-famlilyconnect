@@ -14,6 +14,7 @@ const Header = () => {
 
   const { username, userEmail } = useUserContext();
 
+
   
   // Navbar toggle
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -44,6 +45,15 @@ const Header = () => {
       setOpenIndex(index);
     }
   };
+
+  const role = (session?.user as { role?: string })?.role || "user"; // Default to "guest" if role is undefined
+
+  const filteredMenu = menuData.filter((item) => {
+    if (item.requiresAdmin && role !== 'admin') return false;
+    return true;
+  })
+
+
 
   const { theme, setTheme } = useTheme();
 
@@ -140,7 +150,7 @@ const Header = () => {
                   }`}
                 >
                   <ul className="block divide-y divide-gray-100 dark:divide-gray-800 lg:ml-8 lg:flex lg:gap-x-8 lg:divide-y-0 xl:ml-14 xl:gap-x-12">
-                    {menuData.map((menuItem, index) =>
+                    {filteredMenu.map((menuItem, index) =>
                       menuItem.path ? (
                         <li key={index} className="group relative">
                           {pathUrl !== "/" ? (

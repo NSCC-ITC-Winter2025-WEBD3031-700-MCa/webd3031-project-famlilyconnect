@@ -41,7 +41,8 @@ const menuData: Menu[] = [
     id: 8,
     title: "Admin",
     path: "/admin",
-    newTab: false
+    newTab: false,
+    requiresAdmin: true
   }
 
 ];

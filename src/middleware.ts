@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.SECRET });
 
 
-  const protectedRoutes = ['/family',]; 
+  const protectedRoutes = ['/family', '/admin']; 
 
   console.log(token)
 
@@ -24,5 +24,5 @@ export async function middleware(req: NextRequest) {
 
 
 export const config = {
-  matcher: ['/family/:path*', ],
+  matcher: ['/family/:path*', '/admin/:path*' ],
 };
