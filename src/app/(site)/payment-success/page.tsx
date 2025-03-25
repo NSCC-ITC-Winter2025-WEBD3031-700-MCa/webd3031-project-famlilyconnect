@@ -3,6 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
+// import { Link } from "lucide-react";
+import Link from 'next/link';
 
 const SuccessPayment = () => {
   const searchParams = useSearchParams();
@@ -10,6 +12,7 @@ const SuccessPayment = () => {
   const [customerEmail, setCustomerEmail] = useState("");
 
   useEffect(() => {
+    console.log("sessionId:", sessionId); // Debugging
     if (sessionId) {
       axios
         .get(`/api/payment/session?session_id=${sessionId}`)
@@ -24,9 +27,14 @@ const SuccessPayment = () => {
         <h2 className="text-2xl font-bold text-green-600">Payment Successful! 🎉</h2>
         <p className="mt-2 text-gray-600">Thank you for your purchase!</p>
         {customerEmail && <p className="mt-1 text-gray-500">A receipt has been sent to: {customerEmail}</p>}
+        <Link href="/" className="mt-4 inline-block bg-primary text-white px-6 py-2 rounded-md">
+          <span className="ml-2">Go to Homepage</span>
+        </Link>
+        {/* The above code is equivalent to the following code:
         <a href="/" className="mt-4 inline-block bg-primary text-white px-6 py-2 rounded-md">
           Go to Homepage
         </a>
+        */}
       </div>
     </div>
   );
