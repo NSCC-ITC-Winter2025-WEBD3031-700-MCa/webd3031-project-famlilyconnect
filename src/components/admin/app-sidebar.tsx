@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings, LogOut } from "lucide-react"
+import { Calendar, Home, Inbox, Search, Settings, LogOut, ArrowBigLeft } from "lucide-react"
 import Link from "next/link"
 import {
   Sidebar,
@@ -14,6 +14,11 @@ import { NavUser } from "./nav-user"
 
 // Menu items.
 const items = [
+  {
+    title: "Back to FamConnect",
+    url: "/",
+    icon: ArrowBigLeft
+  },
   {
     title: "Dashboard",
     url: "/admin",
