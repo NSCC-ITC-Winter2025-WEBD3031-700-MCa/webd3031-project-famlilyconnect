@@ -50,25 +50,26 @@ model Session {
 }
 
 model User {
-  id                    String    @id @default(cuid())
+  id                    String         @id @default(cuid())
   name                  String?
-  email                 String?   @unique
+  email                 String?        @unique
   emailVerified         DateTime?
   image                 String?
   password              String?
-  passwordResetToken    String?   @unique
+  passwordResetToken    String?        @unique
   passwordResetTokenExp DateTime?
   accounts              Account[]
   sessions              Session[]
-  role                  String? @default("user")
-  familyMembers FamilyMember[]
-  posts         Post[]
-  events        Event[]        @relation("UserEvents")
-  photos        Photo[]
+  role                  String?        @default("user")
+  familyMembers         FamilyMember[]
+  posts                 Post[]
+  events                Event[]
+  photos                Photo[]
 
   mainFamilyId String?
   mainFamily   Family?      @relation("MainFamily", fields: [mainFamilyId], references: [id])
   Invitation   Invitation[]
+
 }
 
 model FamilyMember {
@@ -107,15 +108,18 @@ model Post {
 }
 
 model Event {
-  id         String   @id @default(cuid())
-  title      String
-  status     Status   @default(pending)
-  assignedTo String?
-  familyId   String
-  createdAt  DateTime @default(now())
-
-  family Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
-  user   User?  @relation("UserEvents", fields: [assignedTo], references: [id])
+  id          String   @id @default(cuid())
+  title       String
+  status      Status   @default(pending)
+  place       String?
+  familyId    String
+  createdAt   DateTime @default(now())
+  createdById String
+  description String?
+  
+  family  Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  creator User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  
 }
 
 model Photo {
