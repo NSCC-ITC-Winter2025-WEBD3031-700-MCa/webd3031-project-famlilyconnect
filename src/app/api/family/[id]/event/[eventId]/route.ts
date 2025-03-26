@@ -52,15 +52,12 @@ export async function DELETE(req: NextRequest, context:any) {
   }
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { familyId: string; eventId: string } }
-) {
+export async function PUT(req: Request, context:any ) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { familyId, eventId } = params;
+    const { familyId, eventId } = await context.params;
     const { status } = await req.json();
 
     // Verify user has permission
