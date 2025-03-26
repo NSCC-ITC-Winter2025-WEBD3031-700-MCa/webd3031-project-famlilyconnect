@@ -31,7 +31,23 @@ export async function GET(req: Request, context: any) {
             },
           },
         },
+        events: {
+          include: {  
+            creator: {  
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc' 
+          }
+        }
       },
+      
     });
 
     if (!family) {
