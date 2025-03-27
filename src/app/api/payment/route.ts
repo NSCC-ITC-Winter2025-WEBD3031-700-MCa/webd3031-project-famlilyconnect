@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import { stripe } from "@/lib/stripe"; // Import shared Stripe instance
 
 export async function POST(request: NextRequest) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2023-10-16",
-  });
+  // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  //   apiVersion: "2023-10-16",
+  // });
   let data = await request.json();
   let priceId = data.priceId;
 
   try {
     const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"], // Supports Google Pay & Apple Pay
       line_items: [
         {
           price: priceId,
@@ -17,8 +18,9 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: "subscription",
-      success_url: `${process.env.SITE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.SITE_URL}/cancel`,
+      success_url: `${process.env.SITE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.SITE_URL}/cancel-payment`,
+      // automatic_tax: {enabled: true},
     });
 
     return NextResponse.json({ url: session.url });
