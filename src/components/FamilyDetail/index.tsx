@@ -1,12 +1,14 @@
 "use client";
 
 import { Photo as PrismaPhoto } from "@prisma/client";
-import { Calendar, Image as ImageIcon, MessageSquare, Plus, User } from "lucide-react";
+import { Calendar, Image as ImageIcon, MessageSquare, Newspaper, Plus, User } from "lucide-react";
 import { notFound, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import PhotoGallery from "./PhotoGallery";
 import CreateEventForm from "../Event/CreateEventForm";
 import Event from "../Event";
+import Post from "../Post";
+import CreatePost from "../Post/CreatePost";
 
 interface Photo extends PrismaPhoto {
   uploader: {
@@ -38,7 +40,9 @@ const FamilyDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
+  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>([]);
 
   const params = useParams();
   const id = params.id as string;
@@ -51,14 +55,16 @@ const FamilyDetail = () => {
   }, []);
 
   const fetchFamily = async () => {
-    setIsLoading(true);
+    
     const data = await getFamilyDetails(id);
     if (!data) {
-      notFound();
+      setIsLoading(false);
+      notFound(); 
     }
-  
+    
     setFamily(data);
     setEvents(data.events);
+    setPosts(data.posts)
 
     console.log(data);
    
@@ -79,24 +85,14 @@ const FamilyDetail = () => {
     setIsLoading(false);
   };
 
-  const posts = [
-    {
-      id: "post1",
-      content: "This is a post from Family A.",
-      author: "Jane Doe",
-      timestamp: "2 days ago",
-    },
-    {
-      id: "post2",
-      content: "Another post from Family A.",
-      author: "John Smith",
-      timestamp: "5 days ago",
-    },
-  ];
-
   const handleCreateEvent = () => {
     setIsCreateEventModalOpen((prev) => !prev);
   };
+
+  const handleCreatePost = () => {
+    setIsCreatePostModalOpen((prev) => !prev);  
+  };
+
   const TabButton = ({
     tab,
     icon,
@@ -276,12 +272,19 @@ const FamilyDetail = () => {
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                       Family Posts
                     </h2>
-                    <button className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600">
-                      New Post
+                    <button 
+                      className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+                      onClick={() => handleCreatePost()}
+                    >
+                      {isCreatePostModalOpen ? "Close" : "Create Post"}
                     </button>
                   </div>
 
-                  <div className="space-y-6">
+                  {isCreatePostModalOpen && (
+                    <CreatePost familyId={id} fetchFamily = {fetchFamily} setIsCreatePostModalOpen={setIsCreatePostModalOpen} />
+                  )}
+
+                  {/* <div className="space-y-6">
                     {posts.map((post) => (
                       <div
                         key={post.id}
@@ -343,7 +346,26 @@ const FamilyDetail = () => {
                         </div>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
+                   {!isCreatePostModalOpen && (
+                    posts.length > 0 ? (
+                      <Post posts={posts} familyId={id} fetchFamily = {fetchFamily} />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-16 px-4 bg-gray-50/50 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-gray-300 hover:dark:border-gray-600">
+                        <div className="bg-gray-100 dark:bg-gray-700 p-5 rounded-full mb-5 shadow-inner">
+                        <Newspaper  size={28} className="text-gray-400 dark:text-gray-300" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                          No post created yet
+                        </h3>
+                        <p className="text-gray-500 dark:text-gray-400 text-center max-w-md mb-6">
+                          Create your first post to start organizing gatherings with friends and family.
+                        </p>
+                      </div>
+                    )
+                  )}
+                  
+               
                 </section>
               )}
 
