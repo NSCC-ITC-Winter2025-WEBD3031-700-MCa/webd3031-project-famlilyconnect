@@ -13,6 +13,7 @@ import { ButtonGroup } from "@/components/admin/button-group"
 import { useEffect, useState } from 'react';
 
 interface User {
+  id: string;
   name: string;
   email: string;
   role: string;
@@ -26,6 +27,7 @@ export default function UserTable() {
       try {
         const res = await fetch('/api/members');
         const data = await res.json();
+        console.log("Fetched users:", data); 
         setUsers(data);
       } catch (err) {
         console.error('Error fetching members:', err);
@@ -34,6 +36,8 @@ export default function UserTable() {
 
     fetchUsers();
   }, []);
+
+
   return (
     <Table>
       <TableHeader>
@@ -46,11 +50,12 @@ export default function UserTable() {
       </TableHeader>
       <TableBody>
         {users.map((user: User) => (
-          <TableRow key={user.email}>
+          <TableRow key={user.id}>
+            <TableCell className="font-medium hidden">{user.id}</TableCell>
             <TableCell className="font-medium">{user.name}</TableCell>
             <TableCell className="font-medium">{user.email}</TableCell>
             <TableCell className="font-medium">{user.role}</TableCell>
-            <TableCell className="font-medium"><ButtonGroup /></TableCell>
+            <TableCell className="font-medium"><ButtonGroup userId={user.id} /></TableCell>
           </TableRow>
         ))}
       </TableBody>
