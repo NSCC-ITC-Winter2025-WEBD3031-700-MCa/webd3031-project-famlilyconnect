@@ -45,9 +45,22 @@ export async function GET(req: Request, context: any) {
           orderBy: {
             createdAt: 'desc' 
           }
-        }
+        },
+        posts: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc' 
+          }
+        },
       },
-      
     });
 
     if (!family) {

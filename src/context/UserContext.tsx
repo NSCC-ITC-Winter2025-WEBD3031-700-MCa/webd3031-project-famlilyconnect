@@ -7,6 +7,7 @@ interface UserContextType {
   profileImage: string | null;
   userEmail: string | null; 
   username: string | null;
+  userId: string | null;
   setProfileImage: (image: string | null) => void;
   setUsername: (username: string | null) => void;
 }
@@ -18,7 +19,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null); 
   const [username, setUsername] = useState<string | null>(null);
-
+  const [userId, setUserId] = useState<string | null>(null);
   // Fetch user info from the database
   const fetchUserInfo = async (id: string) => {
     if (session?.user?.email) {
@@ -30,6 +31,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setProfileImage(userData.image || "/images/profile/default.jpg");
         setUsername(userData.name || null);
         setUserEmail(userData.email || null);
+        setUserId(id);
       } catch (error) {
         console.error("Failed to fetch user info:", error);
       }
@@ -52,6 +54,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         profileImage, 
         userEmail, 
         username, 
+        userId,
         setProfileImage, 
         setUsername, 
       }}
