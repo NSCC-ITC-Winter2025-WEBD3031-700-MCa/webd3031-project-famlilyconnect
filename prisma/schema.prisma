@@ -70,6 +70,7 @@ model User {
   mainFamily   Family?      @relation("MainFamily", fields: [mainFamilyId], references: [id])
   Invitation   Invitation[]
 
+  subscription Subscription?
 }
 
 model FamilyMember {
@@ -155,4 +156,16 @@ model Invitation {
   inviter User   @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
 
   @@unique([email, familyId])
+}
+
+model Subscription {
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  stripeSubscriptionId String    @unique
+  priceId              String
+  status               String
+  startDate            DateTime
+  endDate              DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
