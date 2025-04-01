@@ -1,11 +1,25 @@
+"use client";
+
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation"; // Next.js 13+ uses next/navigation
 import React from "react";
 import OfferList from "./OfferList";
 import { Price } from "@/types/price";
 
 const PricingBox = ({ product }: { product: Price }) => {
-  const handleSubscription = async (e: any) => {
+  const { data: session } = useSession(); // Get the session object
+  const router = useRouter(); // Get router object instance
+
+  const handleSubscription = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    if (!session) {
+      // if user is not Logged in, redirect to login page
+      router.push("/signin");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "/api/payment",
@@ -23,22 +37,6 @@ const PricingBox = ({ product }: { product: Price }) => {
       console.error("Payment Error:", error);
     }
   };
-  // // POST request
-  // const handleSubscription = async (e: any) => {
-  //   e.preventDefault();
-  //   const { data } = await axios.post(
-  //     "/api/payment",
-  //     {
-  //       priceId: product.id,
-  //     },
-  //     {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     },
-  //   );
-  //   window.location.assign(data);
-  // };
 
   return (
     <div className="w-full px-4 md:w-1/2 lg:w-1/3">
@@ -47,13 +45,18 @@ const PricingBox = ({ product }: { product: Price }) => {
         data-wow-delay=".1s"
       >
         {product.nickname === "Premium" && (
-          <p className="absolute right-[-50px] top-[60px] inline-block -rotate-90 rounded-bl-md rounded-tl-md bg-primary px-5 py-2 text-base font-medium text-white">
+          <p className="absolute right-[-45px] top-[60px] inline-block -rotate-90 rounded-bl-md rounded-tl-md bg-primary px-5 py-2 text-base font-medium text-white">
             Recommended
           </p>
         )}
         {product.nickname === "Basic" && (
           <p className="absolute right-[-10px] top-[20px] inline-block -rotate-90 rounded-bl-md rounded-tl-md bg-green-500 px-5 py-2 text-base font-medium text-white">
             Free
+          </p>
+        )}
+        {product.nickname === "Business" && (
+          <p className="absolute right-[-20px] top-[30px] inline-block -rotate-90 rounded-bl-md rounded-tl-md bg-yellow-500 px-5 py-2 text-base font-medium text-white">
+            Business
           </p>
         )}
         <span className="mb-5 block text-xl font-medium text-dark dark:text-white">
@@ -87,7 +90,8 @@ const PricingBox = ({ product }: { product: Price }) => {
             onClick={handleSubscription}
             className="inline-block rounded-md bg-primary px-7 py-3 text-center text-base font-medium text-white transition duration-300 hover:bg-primary/90"
           >
-            Purchase Now
+            {session ? "Subscribe" : "Sign In to Subscribe"}
+            {/* Purchase Now */}
           </button>
         </div>
       </div>
