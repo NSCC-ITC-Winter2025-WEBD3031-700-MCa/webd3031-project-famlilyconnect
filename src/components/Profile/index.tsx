@@ -357,7 +357,7 @@ export default function ProfilePage() {
                 <div>
                 <h2 className="text-2xl font-bold text-black dark:text-white mb-6">Joined Groups</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {userInfo?.familyGroups?.map((group, index) => ( // Optional chaining
+                  {userInfo?.familyGroups?.map((group, index) => ( 
                     <div key={group.id} className="bg-gray-800 rounded-lg border border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
                       <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-3"></div>
                       <div className="p-4">

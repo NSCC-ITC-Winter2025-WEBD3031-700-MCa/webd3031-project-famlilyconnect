@@ -38,7 +38,6 @@ const CreatePost: React.FC<CreatePostProps> = ({ setIsCreatePostModalOpen, famil
       if (!response.ok) {
         throw new Error('Failed to create post');
       }
-
       setContent('');
       fetchFamily();
       setIsCreatePostModalOpen(false);

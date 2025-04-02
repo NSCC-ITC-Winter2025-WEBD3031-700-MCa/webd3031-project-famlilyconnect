@@ -1,5 +1,5 @@
 'use client'
-
+import { canCreateContent, canEditContent, canDeleteContent, Role } from "@/utils/roles";
 import { Image as ImageIcon, Plus, Upload, Trash2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -28,14 +28,17 @@ type FamilyMember = {
 };
 
 const PhotoGallery = ({ 
-  photos, 
+  photos: initialPhotos,
   familyId, 
-  fetchFamily
+  fetchFamily,
+  currentUserRole
 }: { 
   photos: Photo[]; 
   familyId: string;
   fetchFamily: () => void;
+  currentUserRole: Role,
 }) => {
+  const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
   const [isUploading, setIsUploading] = useState(false);
   const [enlargedPhoto, setEnlargedPhoto] = useState<Photo | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,8 +113,14 @@ const PhotoGallery = ({
 
       if (!response.ok) throw new Error("Failed to save photo to database");
 
-      fetchFamily();
-      // Reset to first page after uploading
+      const result = await response.json();
+      
+      console.log(result)
+      console.log(photos)
+    
+      setPhotos(prev => [result, ...prev]);
+      
+  
       setCurrentPage(1);
 
     } catch (error) {
@@ -126,9 +135,9 @@ const PhotoGallery = ({
       });
 
       if (!response.ok) throw new Error("Failed to delete photo");
-
+      setPhotos(prevPhotos => prevPhotos.filter(photo => photo.id !== photoId));
       toast.success("Photo deleted successfully");
-      fetchFamily();
+      
       // Adjust pagination if needed
       if (paginatedPhotos.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
@@ -179,23 +188,26 @@ const PhotoGallery = ({
 
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Family Photos</h2>
-        <button 
+        {canCreateContent(currentUserRole)&& (
+          <button 
           onClick={handleUploadClick}
           disabled={isUploading}
           className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium flex items-center gap-2"
-        >
-          {isUploading ? (
-            <>
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-              <span>Uploading...</span>
-            </>
-          ) : (
-            <>
-              <Upload size={16} />
-              <span>Upload Photos</span>
-            </>
-          )}
-        </button>
+          >
+            {isUploading ? (
+              <>
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                <span>Uploading...</span>
+              </>
+            ) : (
+              <>
+                <Upload size={16} />
+                <span>Upload Photos</span>
+              </>
+            )}
+          </button>
+        )}
+        
         <input
           type="file"
           ref={fileInputRef}
@@ -231,13 +243,16 @@ const PhotoGallery = ({
                     <span>{formatDate(photo.createdAt)}</span>
                   </div>
                 </div>
-                <button 
+                {canDeleteContent(currentUserRole) && (
+                  <button 
                   onClick={() => handleDeletePhoto(photo.id)}
                   className="absolute top-2 right-2 bg-red-500/80 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
                   title="Delete Photo"
-                >
-                  <Trash2 size={16} />
-                </button>
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
+                
               </div>
             ))}
           </div>
@@ -274,13 +289,7 @@ const PhotoGallery = ({
           <p className="text-gray-500 dark:text-gray-400 text-center max-w-md mt-2">
             Upload your first family photo to start sharing memories with your loved ones.
           </p>
-          <button
-            onClick={handleUploadClick}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium flex items-center gap-2"
-          >
-            <Plus size={16} />
-            <span>Add Photo</span>
-          </button>
+        
         </div>
       )}
     </section>

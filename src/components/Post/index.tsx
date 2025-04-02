@@ -1,5 +1,8 @@
 "use client";
 
+import toast from "react-hot-toast";
+import { canCreateContent, canEditContent, canDeleteContent, Role } from "@/utils/roles";
+
 interface Post {
   id: string;
   content: string;
@@ -13,11 +16,12 @@ interface Post {
 interface PostListProps {
   posts: Post[];
   familyId: string;
-  fetchFamily: () => void;
+  currentUserRole: Role;
+  setPosts: (posts: Post[]) => void; 
 }
 
 export default function Post({ posts, familyId,
-  fetchFamily,}: PostListProps) {
+  setPosts , currentUserRole}: PostListProps) {
 
 
   const handleDelete = async (postId: string) => {
@@ -31,8 +35,8 @@ export default function Post({ posts, familyId,
       }
 
       const result = await response.json();
-      console.log("Post deleted:", result.deletedPost);
-      fetchFamily();
+      toast.success("successfully delete the post");
+      setPosts(posts.filter(post => post.id !== postId));
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -48,27 +52,29 @@ export default function Post({ posts, familyId,
             key={post.id}
             className="relative rounded-lg border border-gray-100 bg-gray-50 p-5 dark:border-gray-600 dark:bg-gray-700"
           >
-            
+            {canDeleteContent(currentUserRole)&& (
               <button
-                onClick={() => handleDelete(post.id)}
-                className="absolute right-4 top-4 text-gray-400 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400"
-                aria-label="Delete post"
+              onClick={() => handleDelete(post.id)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400"
+              aria-label="Delete post"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
+            )}
+              
           
 
             <div className="mb-3 flex items-center">

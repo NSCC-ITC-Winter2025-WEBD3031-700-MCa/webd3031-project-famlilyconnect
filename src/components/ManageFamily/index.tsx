@@ -7,6 +7,7 @@ import InviteMember from './InviteMember';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { UserPlus, UserCheck, Home, Plus, ArrowRight } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 type Member = {
   role: 'admin' | 'viewer' | 'member';
@@ -101,11 +102,7 @@ const ManageFamily = () => {
       ],
     };
     setFamilies([...families, joinedFamily]);
-    alert(`Joined family with invite code: ${inviteCode}`);
-  };
-
-  const handleInviteMember = (email: string) => {
-    alert(`Invited member: ${email}`);
+    
   };
 
   const getRoleBadge = (role: string) => {
@@ -231,7 +228,7 @@ const ManageFamily = () => {
         <div className="mt-6">
           {activeTab === 'join' && <JoinFamily onJoinFamily={handleJoinFamily} />}
           {activeTab === 'create' && <CreateFamily onCreateFamily={handleCreateFamily} fetchFamilies={fetchFamilies} />}
-          {activeTab === 'invite' && <InviteMember onInviteMember={handleInviteMember} creatorFamilyId={creatorFamilyId ?? ''} />}
+          {activeTab === 'invite' && <InviteMember creatorFamilyId={creatorFamilyId ?? ''} />}
         </div>
       </div>
     </div>

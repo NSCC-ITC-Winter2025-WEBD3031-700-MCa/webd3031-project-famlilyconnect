@@ -1,9 +1,30 @@
+import { User } from 'lucide-react';
 import { NextResponse } from "next/server";
 import { prisma } from "@/utils/prismaDB";
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/utils/auth';
+import { User as AuthUser } from 'next-auth';
 
 export async function GET(req: Request, context: any) {
   try {
+    const session = await getServerSession(authOptions) as { user: AuthUser & { id: string } };
     const { id } = await context.params; 
+    const userId = session.user.id;
+    const familyId = id;
+    if (!session.user) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
+    const isMember = await prisma.familyMember.findFirst({
+      where: {
+        familyId,
+        userId,
+      },
+    });
+
+    if (!isMember) {
+      return new NextResponse('No longer a member', { status: 403 });
+    }
 
     const family = await prisma.family.findUnique({
       where: { id: id },
