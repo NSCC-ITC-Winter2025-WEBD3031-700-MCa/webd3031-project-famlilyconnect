@@ -1,7 +1,8 @@
 "use client";
-
+import { canCreateContent, canEditContent, canDeleteContent, Role } from "@/utils/roles";
 import { Calendar, MapPin, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 interface Event {
   id: string;
@@ -21,12 +22,14 @@ interface EventProps {
   events: Event[];
   familyId: string;
   fetchFamily: () => void;
+  currentUserRole: Role
 }
 
 const Event = ({
   events: initialEvents,
   familyId,
   fetchFamily,
+  currentUserRole
 }: EventProps) => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,8 +75,6 @@ const Event = ({
         throw new Error("Failed to update event status");
       }
 
-      fetchFamily();
-
       setIsModalOpen(false);
     } catch (error) {
       setSelectedEvent(selectedEvent);
@@ -93,8 +94,8 @@ const Event = ({
       }
 
       const result = await response.json();
-      console.log("Event deleted:", result.deletedEvent);
-      fetchFamily();
+      toast.success("event deleted successfully");
+      setEvents(prevEvents => prevEvents.filter(event => event.id !== eventId));
     } catch (error) {
       console.error("Error deleting event:", error);
     }
@@ -123,7 +124,8 @@ const Event = ({
               </div>
 
               <div className="flex space-x-2">
-                <button
+                {canDeleteContent(currentUserRole)&&(
+                  <button
                   onClick={() => handleDeleteEvent(event.id)}
                   className="rounded-full p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30"
                   title="Delete Event"
@@ -139,6 +141,8 @@ const Event = ({
                     <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
+                )}
+                
               </div>
             </div>
 
@@ -311,21 +315,26 @@ const Event = ({
               >
                 Close
               </button>
-              {selectedEvent.status === "pending" ? (
-                <button
-                  onClick={() => handleStatusChange("completed")}
-                  className="rounded-lg bg-gradient-to-r from-green-500 to-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:from-green-600 dark:to-green-700 dark:hover:from-green-700 dark:hover:to-green-800"
-                >
-                  Mark as Completed
-                </button>
-              ) : (
-                <button
-                  onClick={() => handleStatusChange("pending")}
-                  className="rounded-lg bg-gradient-to-r from-yellow-500 to-yellow-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:from-yellow-600 dark:to-yellow-700 dark:hover:from-yellow-700 dark:hover:to-yellow-800"
-                >
-                  Reopen Event
-                </button>
+              {canEditContent(currentUserRole) && (
+                <div className="">
+                  {selectedEvent.status === "pending" ? (
+                    <button
+                      onClick={() => handleStatusChange("completed")}
+                      className="rounded-lg bg-gradient-to-r from-green-500 to-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:from-green-600 dark:to-green-700 dark:hover:from-green-700 dark:hover:to-green-800"
+                    >
+                      Mark as Completed
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleStatusChange("pending")}
+                      className="rounded-lg bg-gradient-to-r from-yellow-500 to-yellow-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:from-yellow-600 dark:to-yellow-700 dark:hover:from-yellow-700 dark:hover:to-yellow-800"
+                    >
+                      Reopen Event
+                    </button>
+                  )}
+                </div>
               )}
+              
             </div>
           </div>
         </div>

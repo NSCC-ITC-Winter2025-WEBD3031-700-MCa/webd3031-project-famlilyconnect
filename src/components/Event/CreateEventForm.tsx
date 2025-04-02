@@ -3,6 +3,7 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const CreateEventForm = ({ familyId, familyMembers, fetchFamily, setIsCreateEventModalOpen }: { 
   familyId: string,
@@ -35,7 +36,6 @@ const CreateEventForm = ({ familyId, familyMembers, fetchFamily, setIsCreateEven
     setIsSubmitting(true);
     setError('');
 
-    console.log('Creating event with data:', formData);
     try {
       const response = await fetch(`/api/family/${familyId}/event`, {
         method: 'POST',
@@ -58,6 +58,7 @@ const CreateEventForm = ({ familyId, familyMembers, fetchFamily, setIsCreateEven
         throw new Error('Failed to create event');
       }
       setIsCreateEventModalOpen(false);
+      toast.success("successfully create new event");
       fetchFamily();
       // Reset form after successful submission
       setFormData({
