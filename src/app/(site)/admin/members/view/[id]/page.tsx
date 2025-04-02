@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function ViewUser() {
-  const { id } = useParams(); // ✅ Correct way to get ID
+  const { id } = useParams();
   const [user, setUser] = useState<{ name: string; email: string; id: string; role: string } | null>(null);
 
   useEffect(() => {
