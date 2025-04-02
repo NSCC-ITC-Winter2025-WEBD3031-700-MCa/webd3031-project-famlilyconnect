@@ -45,7 +45,7 @@ export default function EditUser() {
           <p>Role:</p>
           {user && <Input type="text" name="role" placeholder="Role" value={user.role} onChange={handleChange}/>}
           <div className="flex justify-center items-center">
-          <button className="bg-blue-600 text-white hover:bg-blue-300 rounded-lg w-1/2">Submit</button>
+          <button className="bg-blue-600 text-white hover:bg-blue-300 rounded-lg w-1/2 p-2">Submit</button>
           </div>
         </div>
       </div>
