@@ -4,6 +4,7 @@ type EmailPayload = {
   to: string;
   subject: string;
   html: string;
+  replyTo?: string;
 };
 
 
@@ -23,7 +24,7 @@ export const sendEmail = async (data: EmailPayload) => {
   });
 
   return await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
+    from: `"Family App Connect" <${process.env.EMAIL_FROM}>`,
     ...data,
   });
 };
