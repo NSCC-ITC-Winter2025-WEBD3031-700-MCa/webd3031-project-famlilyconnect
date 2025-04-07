@@ -2,9 +2,9 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 
-export async function GET(req: Request, context: { params: { id: string } }) {
+export async function GET(req: Request, context: any ) {
   try {
-    const { id } = context.params; // Extract the 'id' from params
+    const { id } = await context.params; // Extract the 'id' from params
 
     if (!id) {
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
@@ -33,9 +33,9 @@ export async function GET(req: Request, context: { params: { id: string } }) {
   }
 }
 
-export async function PUT(req: Request,context: { params: { id: string } }){
+export async function PUT(req: Request,context: any){
   try{
-    const { id } = context.params; // Extract the 'id' from params
+    const { id } = await context.params; // Extract the 'id' from params
 
     if(!id){
       return new Response("User Id not found", {status:404})
@@ -63,9 +63,9 @@ export async function PUT(req: Request,context: { params: { id: string } }){
   }
 }
 
-export async function DELETE(req: Request, context: { params: { id: string } }) {
+export async function DELETE(req: Request, context: any) {
   try {
-    const { id } = context.params; // Extract the 'id' from params
+    const { id } = await context.params; // Extract the 'id' from params
 
     if (!id) {
       return new Response("User Id not found", { status: 404 });
