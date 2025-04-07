@@ -29,6 +29,8 @@ const PricingBox = ({ product }: { product: Price }) => {
   
       // Make sure we get the session URL
       if (response.data.url) {
+        // console.log("Selected priceId:", product.id);
+        // console.log("Session URL:", response.data.url);
         window.location.assign(response.data.url); // Redirect to Stripe Checkout
       } else {
         console.error("Error: No URL received from the server", response.data);
