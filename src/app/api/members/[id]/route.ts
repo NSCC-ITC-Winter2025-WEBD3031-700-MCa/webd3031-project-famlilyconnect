@@ -2,16 +2,17 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, context: { params: { id: string } }) {
   try {
-    
-    if (!params.id) {
+    const { id } = context.params; // Extract the 'id' from params
+
+    if (!id) {
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
     }
     
     const prisma = new PrismaClient();
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       select: {
         id: true,
         name: true,
@@ -21,7 +22,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     });
 
     if (!user) {
-      console.error("User not found:", params.id);
+      console.error("User not found:", id);
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
@@ -32,17 +33,18 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function PUT(req: Request,{ params }: { params: { id: string } }){
+export async function PUT(req: Request,context: { params: { id: string } }){
   try{
+    const { id } = context.params; // Extract the 'id' from params
 
-    if(!params.id){
+    if(!id){
       return new Response("User Id not found", {status:404})
     }
     const body = await req.json();
     const { name, email, role } = body; 
       const prisma = new PrismaClient();
       const updateUser = await prisma.user.update({
-        where: { id: params.id },
+        where: { id: id },
         data:{
           name,
           email,
@@ -61,15 +63,17 @@ export async function PUT(req: Request,{ params }: { params: { id: string } }){
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, context: { params: { id: string } }) {
   try {
-    if (!params.id) {
+    const { id } = context.params; // Extract the 'id' from params
+
+    if (!id) {
       return new Response("User Id not found", { status: 404 });
     }
 
     const prisma = new PrismaClient();
     const deleteUser = await prisma.user.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return new Response(JSON.stringify(deleteUser), { status: 200 });
