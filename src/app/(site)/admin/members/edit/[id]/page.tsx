@@ -1,8 +1,9 @@
 'use client';
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+
+
 
 export default function EditUser() {
   const { id } = useParams();
@@ -47,6 +48,8 @@ export default function EditUser() {
     }
   };
 
+
+
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (user) {
@@ -60,6 +63,7 @@ export default function EditUser() {
     e.preventDefault();
     await updateUser(); // Trigger user update on form submit
   };
+
 
   return (
     <>
