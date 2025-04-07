@@ -8,7 +8,7 @@ const testimonialData: Testimonial[] = [
     name: "Sabo Masties",
     designation: "Founder @ Rolex",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
+      "This platform has transformed how our family stays connected despite living in different time zones. The photo sharing and virtual gatherings feature helped us celebrate my grandmother's 90th birthday when we couldn't be together physically.",
     image: "/images/testimonials/author-01.png",
     star: 5,
   },
@@ -17,7 +17,7 @@ const testimonialData: Testimonial[] = [
     name: "Margin Gesmu",
     designation: "Founder @ UI Hunter",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
+    "As someone who has always struggled to keep up with extended family events, this app has been a game-changer. The family calendar integration and automatic reminders ensure I never miss another birthday or anniversary. Worth every penny!",
     image: "/images/testimonials/author-02.png",
     star: 5,
   },
@@ -26,7 +26,7 @@ const testimonialData: Testimonial[] = [
     name: "William Smith",
     designation: "Founder @ Trorex",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
+      "The genealogy tools here are incredible! I've discovered family connections I never knew existed and have been able to document our family history in a way that's engaging for even the youngest members. The interface is intuitive and user-friendly.",
     image: "/images/testimonials/author-03.png",
     star: 5,
   },
