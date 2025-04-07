@@ -1,5 +1,4 @@
 import About from "@/components/About";
-import HomeBlogSection from "@/components/Blog/HomeBlogSection";
 import CallToAction from "@/components/CallToAction";
 import Clients from "@/components/Clients";
 import ScrollUp from "@/components/Common/ScrollUp";
@@ -36,7 +35,6 @@ export default function Home() {
       <Testimonials />
       <Faq />
       <Team />
-      <HomeBlogSection posts={posts} />
       <Contact />
       <Clients />
     </main>
