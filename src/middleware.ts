@@ -10,7 +10,6 @@ export async function middleware(req: NextRequest) {
 
   const protectedRoutes = ['/family', '/admin']; 
 
-  console.log(token)
 
   if (protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route))) {
 

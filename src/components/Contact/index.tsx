@@ -1,4 +1,121 @@
+'use client'
+import React, { useEffect, useState } from "react";
+
 const Contact = () => {
+  interface FormData {
+    fullName: string;
+    email: string;
+    phone: string;
+    message: string;
+  }
+
+  interface FormErrors {
+    fullName?: string;
+    email?: string;
+    phone?: string;
+    message?: string;
+  }
+  
+  const [formData, setFormData] = useState<FormData>({
+    fullName: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+
+  
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSubmitted) {
+      timer = setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [isSubmitted]);
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!/^[\d\s+\-()]+$/.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid phone number';
+    }
+    
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Message should be at least 10 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    
+    // Clear error when user starts typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitError('');
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+      
+      setIsSubmitted(true);
+      setFormData({
+        fullName: '', 
+        email: '',
+        phone: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitError('Failed to send message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="relative py-20 md:py-[120px]">
       <div className="absolute left-0 top-0 -z-[1] h-full w-full dark:bg-dark"></div>
@@ -33,7 +150,7 @@ const Contact = () => {
                       Our Location
                     </h3>
                     <p className="text-base text-body-color dark:text-dark-6">
-                      401 Broadway, 24th Floor, Orchard Cloud View, London
+                      5685 Leeds St, Halifax, CA
                     </p>
                   </div>
                 </div>
@@ -53,10 +170,7 @@ const Contact = () => {
                       How Can We Help?
                     </h3>
                     <p className="text-base text-body-color dark:text-dark-6">
-                      info@yourdomain.com
-                    </p>
-                    <p className="mt-1 text-base text-body-color dark:text-dark-6">
-                      contact@yourdomain.com
+                      familyappconnect@gmail.com
                     </p>
                   </div>
                 </div>
@@ -66,78 +180,119 @@ const Contact = () => {
           <div className="w-full px-4 lg:w-5/12 xl:w-4/12">
             <div
               className="wow fadeInUp rounded-lg bg-white px-8 py-10 shadow-testimonial dark:bg-dark-2 dark:shadow-none sm:px-10 sm:py-12 md:p-[60px] lg:p-10 lg:px-10 lg:py-12 2xl:p-[60px]"
-              data-wow-delay=".2s
-              "
+              data-wow-delay=".2s"
             >
               <h3 className="mb-8 text-2xl font-semibold text-dark dark:text-white md:text-[28px] md:leading-[1.42]">
                 Send us a Message
               </h3>
-              <form>
-                <div className="mb-[22px]">
-                  <label
-                    htmlFor="fullName"
-                    className="mb-4 block text-sm text-body-color dark:text-dark-6"
-                  >
-                    Full Name*
-                  </label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Adam Gelius"
-                    className="w-full border-0 border-b border-[#f1f1f1] bg-transparent pb-3 text-dark placeholder:text-body-color/60 focus:border-primary focus:outline-none dark:border-dark-3 dark:text-white"
-                  />
+              
+              {isSubmitted ? (
+                <div className="mb-6 rounded-md bg-green-50 p-4 text-green-800">
+                  Thank you for your message! We&apos;ll get back to you soon.
+                  <div className="mt-2 h-1 w-full bg-green-200">
+                    <div 
+                      className="h-full bg-green-500 transition-all duration-5000 ease-linear"
+                      style={{ width: isSubmitted ? '0%' : '100%' }}
+                    />
+                  </div>
                 </div>
-                <div className="mb-[22px]">
-                  <label
-                    htmlFor="email"
-                    className="mb-4 block text-sm text-body-color dark:text-dark-6"
-                  >
-                    Email*
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="example@yourmail.com"
-                    className="w-full border-0 border-b border-[#f1f1f1] bg-transparent pb-3 text-dark placeholder:text-body-color/60 focus:border-primary focus:outline-none dark:border-dark-3 dark:text-white"
-                  />
-                </div>
-                <div className="mb-[22px]">
-                  <label
-                    htmlFor="phone"
-                    className="mb-4 block text-sm text-body-color dark:text-dark-6"
-                  >
-                    Phone*
-                  </label>
-                  <input
-                    type="text"
-                    name="phone"
-                    placeholder="+885 1254 5211 552"
-                    className="w-full border-0 border-b border-[#f1f1f1] bg-transparent pb-3 text-dark placeholder:text-body-color/60 focus:border-primary focus:outline-none dark:border-dark-3 dark:text-white"
-                  />
-                </div>
-                <div className="mb-[30px]">
-                  <label
-                    htmlFor="message"
-                    className="mb-4 block text-sm text-body-color dark:text-dark-6"
-                  >
-                    Message*
-                  </label>
-                  <textarea
-                    name="message"
-                    rows={1}
-                    placeholder="type your message here"
-                    className="w-full resize-none border-0 border-b border-[#f1f1f1] bg-transparent pb-3 text-dark placeholder:text-body-color/60 focus:border-primary focus:outline-none dark:border-dark-3 dark:text-white"
-                  ></textarea>
-                </div>
-                <div className="mb-0">
-                  <button
-                    type="submit"
-                    className="inline-flex items-center justify-center rounded-md bg-primary px-10 py-3 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-primary/90"
-                  >
-                    Send
-                  </button>
-                </div>
-              </form>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  {submitError && (
+                    <div className="mb-6 rounded-md bg-red-50 p-4 text-red-800">
+                      {submitError}
+                    </div>
+                  )}
+                  
+                  <div className="mb-[22px]">
+                    <label
+                      htmlFor="fullName"
+                      className="mb-4 block text-sm text-body-color dark:text-dark-6"
+                    >
+                      Full Name*
+                    </label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      className={`w-full border-0 border-b ${errors.fullName ? 'border-red-500' : 'border-[#f1f1f1]'} bg-transparent pb-3 text-dark placeholder:text-body-color/60 focus:border-primary focus:outline-none dark:border-dark-3 dark:text-white`}
+                    />
+                    {errors.fullName && (
+                      <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
+                    )}
+                  </div>
+                  
+                  <div className="mb-[22px]">
+                    <label
+                      htmlFor="email"
+                      className="mb-4 block text-sm text-body-color dark:text-dark-6"
+                    >
+                      Email*
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="example@yourmail.com"
+                      className={`w-full border-0 border-b ${errors.email ? 'border-red-500' : 'border-[#f1f1f1]'} bg-transparent pb-3 text-dark placeholder:text-body-color/60 focus:border-primary focus:outline-none dark:border-dark-3 dark:text-white`}
+                    />
+                    {errors.email && (
+                      <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                    )}
+                  </div>
+                  
+                  <div className="mb-[22px]">
+                    <label
+                      htmlFor="phone"
+                      className="mb-4 block text-sm text-body-color dark:text-dark-6"
+                    >
+                      Phone*
+                    </label>
+                    <input
+                      type="text"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className={`w-full border-0 border-b ${errors.phone ? 'border-red-500' : 'border-[#f1f1f1]'} bg-transparent pb-3 text-dark placeholder:text-body-color/60 focus:border-primary focus:outline-none dark:border-dark-3 dark:text-white`}
+                    />
+                    {errors.phone && (
+                      <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+                    )}
+                  </div>
+                  
+                  <div className="mb-[30px]">
+                    <label
+                      htmlFor="message"
+                      className="mb-4 block text-sm text-body-color dark:text-dark-6"
+                    >
+                      Message*
+                    </label>
+                    <textarea
+                      name="message"
+                      rows={1}
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="type your message here"
+                      className={`w-full resize-none border-0 border-b ${errors.message ? 'border-red-500' : 'border-[#f1f1f1]'} bg-transparent pb-3 text-dark placeholder:text-body-color/60 focus:border-primary focus:outline-none dark:border-dark-3 dark:text-white`}
+                    ></textarea>
+                    {errors.message && (
+                      <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+                    )}
+                  </div>
+                  
+                  <div className="mb-0">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={`inline-flex items-center justify-center rounded-md bg-primary px-10 py-3 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-primary/90 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    >
+                      {isSubmitting ? 'Sending...' : 'Send'}
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </div>

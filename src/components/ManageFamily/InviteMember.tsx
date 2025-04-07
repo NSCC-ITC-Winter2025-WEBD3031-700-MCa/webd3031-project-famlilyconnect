@@ -3,61 +3,55 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { validateEmail } from "@/utils/validateEmail"; 
 import Loader from "@/components/Common/Loader"; 
-import { useSession } from 'next-auth/react'; 
-import { on } from "events";
+import { useSession } from 'next-auth/react';
 
 interface InviteMemberProps {
   creatorFamilyId: string;
-  onInviteMember: (email:string) => void;
 }
 
-
-const InviteMember = ({ creatorFamilyId, onInviteMember }: InviteMemberProps) => {
+const InviteMember = ({ creatorFamilyId }: InviteMemberProps) => {
   const [email, setEmail] = useState("");
   const [loader, setLoader] = useState(false);
   const { data: session } = useSession() as { data: { user: { id: string } } | null };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) {
       return toast.error("Please enter an email address.");
     }
 
-    setLoader(true);
-
     if (!validateEmail(email)) {
-      setLoader(false);
       return toast.error("Please enter a valid email address.");
     }
 
- 
-    fetch("/api/invite", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        familyId: creatorFamilyId,
-        inviterId: session?.user?.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message === "Invitation sent successfully") {
-          toast.success("Invitation sent successfully!");
-          onInviteMember(email);
-          setEmail(""); 
-        } else {
-          toast.error("Failed to send invitation.");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Error sending invitation.");
-      })
-      .finally(() => {
-        setLoader(false);
+    setLoader(true);
+
+    try {
+      const response = await fetch("/api/invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          familyId: creatorFamilyId,
+          inviterId: session?.user?.id,
+        }),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to send invitation");
+      }
+
+      toast.success("Invitation sent successfully!");
+      setEmail("");
+    } catch (error) {
+      console.error(error);
+      toast.error(error instanceof Error ? error.message : "Error sending invitation");
+    } finally {
+      setLoader(false);
+    }
   };
 
   return (
@@ -77,7 +71,8 @@ const InviteMember = ({ creatorFamilyId, onInviteMember }: InviteMemberProps) =>
       <div className="mb-9">
         <button
           type="submit"
-          className="flex w-full cursor-pointer items-center justify-center rounded-md border border-primary bg-primary px-5 py-3 text-base text-white transition duration-300 ease-in-out hover:bg-blue-dark"
+          disabled={loader}
+          className="flex w-full cursor-pointer items-center justify-center rounded-md border border-primary bg-primary px-5 py-3 text-base text-white transition duration-300 ease-in-out hover:bg-blue-dark disabled:opacity-80"
         >
           Send Invitation {loader && <Loader />}
         </button>

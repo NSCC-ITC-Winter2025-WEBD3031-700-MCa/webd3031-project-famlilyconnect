@@ -1,14 +1,25 @@
 "use client";
 
 import { Photo as PrismaPhoto } from "@prisma/client";
-import { Calendar, Image as ImageIcon, MessageSquare, Newspaper, Plus, User } from "lucide-react";
+import { canCreateContent, canEditContent, canDeleteContent } from "@/utils/roles";
+import {
+  Calendar,
+  Image as ImageIcon,
+  MessageSquare,
+  Newspaper,
+  User
+} from "lucide-react";
 import { notFound, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import PhotoGallery from "./PhotoGallery";
-import CreateEventForm from "../Event/CreateEventForm";
+import toast from "react-hot-toast";
 import Event from "../Event";
+import CreateEventForm from "../Event/CreateEventForm";
 import Post from "../Post";
 import CreatePost from "../Post/CreatePost";
+import PhotoGallery from "./PhotoGallery";
+import FamilyMember from "../FamilyMember";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface Photo extends PrismaPhoto {
   uploader: {
@@ -24,8 +35,10 @@ interface Photo extends PrismaPhoto {
 const getFamilyDetails = async (id: string) => {
   try {
     const res = await fetch(`/api/family/${id}`);
-    if (!res.ok) return null;
-    return await res.json();
+    return {
+      status: res.status,
+      data: await res.json().catch(() => null)
+    };
   } catch (error) {
     console.error("Failed to fetch family details:", error);
     return null;
@@ -43,44 +56,52 @@ const FamilyDetail = () => {
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
   const [posts, setPosts] = useState<any[]>([]);
+  const { data: session } = useSession();
+  const router = useRouter();
+
+
+  const currentUserRole = family?.members?.find(
+    (member: any) => member.userId === session?.user?.id
+  )?.role || "viewer";
 
   const params = useParams();
   const id = params.id as string;
 
-  
   useEffect(() => {
-   
     fetchFamily();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchFamily = async () => {
-    
-    const data = await getFamilyDetails(id);
-    if (!data) {
+    const result = await getFamilyDetails(id);
+    if (!result) {
       setIsLoading(false);
-      notFound(); 
+      return notFound();
     }
+    const { status, data } = result;
     
+    if (status === 403) {
+      toast.error("You're no longer a member");
+      router.push('/family');
+      return;
+    }
+  
     setFamily(data);
     setEvents(data.events);
-    setPosts(data.posts)
+    setPosts(data.posts);
 
-    console.log(data);
-   
-  
     const allPhotos = data.photos.map((photo: any) => ({
       ...photo,
       createdAt: new Date(photo.createdAt),
       uploader: {
         id: photo.uploaderId,
-        name: photo.uploader?.name || null,  
-        email: photo.uploader?.email || null, 
+        name: photo.uploader?.name || null,
+        email: photo.uploader?.email || null,
         createdAt: new Date(photo.uploader?.createdAt || photo.createdAt),
-      }
+      },
     }));
 
-    setPhotos(allPhotos)
+    setPhotos(allPhotos);
 
     setIsLoading(false);
   };
@@ -90,7 +111,23 @@ const FamilyDetail = () => {
   };
 
   const handleCreatePost = () => {
-    setIsCreatePostModalOpen((prev) => !prev);  
+    setIsCreatePostModalOpen((prev) => !prev);
+  };
+  const handleMemberRemoved = (memberId: string) => {
+    setFamily((prev: { members: any[]; }) => prev ? {
+      ...prev,
+      members: prev.members.filter(m => m.id !== memberId)
+    } : null);
+  };
+
+  // Handler for when a role is changed
+  const handleRoleChanged = (memberId: string, newRole: "admin" | "editor" | "viewer") => {
+    setFamily((prev: { members: any[]; }) => prev ? {
+      ...prev,
+      members: prev.members.map(m => 
+        m.id === memberId ? { ...m, role: newRole } : m
+      )
+    } : null);
   };
 
   const TabButton = ({
@@ -208,62 +245,15 @@ const FamilyDetail = () => {
           <main className="flex-1">
             <div className="rounded-xl bg-white p-6 shadow-md dark:bg-gray-800">
               {/* Members Tab */}
-              {activeTab === "members" && (
-                <section>
-                  <div className="mb-6 flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                      Family Members
-                    </h2>
-                    <button className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600">
-                      Add Member
-                    </button>
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {family.members && family.members.length > 0 ? (
-                      family.members.map(
-                        (member: {
-                          id: string;
-                          userId: string;
-                          role: string;
-                          user: { name: string | null; email: string };
-                        }) => (
-                          <div
-                            key={member.id}
-                            className="flex items-start rounded-lg border border-gray-100 bg-gray-50 p-4 transition-shadow duration-300 hover:shadow-md dark:border-gray-600 dark:bg-gray-700"
-                          >
-                            <div className="mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
-                              <span className="text-lg font-bold text-blue-700 dark:text-blue-300">
-                                {(
-                                  member.user?.name ||
-                                  member.user?.email ||
-                                  "U"
-                                )
-                                  .charAt(0)
-                                  .toUpperCase()}
-                              </span>
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-gray-800 dark:text-white">
-                                {member.user?.name ||
-                                  member.user?.email ||
-                                  "Unknown Member"}
-                              </h3>
-                              <div className="mt-1 inline-block rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                                {member.role}
-                              </div>
-                            </div>
-                          </div>
-                        ),
-                      )
-                    ) : (
-                      <p className="col-span-2 py-8 text-center text-gray-500 dark:text-gray-400">
-                        No members found. Add family members to get started!
-                      </p>
-                    )}
-                  </div>
-                </section>
-              )}
+              {activeTab === "members" && family && session?.user && (
+            <FamilyMember
+              members={family.members}
+              currentUserId={session.user.id}
+              familyId={family.id}
+              onMemberRemoved={handleMemberRemoved}
+              onRoleChanged={handleRoleChanged}
+            />
+          )}
 
               {/* Posts Tab */}
               {activeTab === "posts" && (
@@ -272,100 +262,49 @@ const FamilyDetail = () => {
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                       Family Posts
                     </h2>
-                    <button 
+                  {canCreateContent(currentUserRole) &&(
+                    <button
                       className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
                       onClick={() => handleCreatePost()}
                     >
                       {isCreatePostModalOpen ? "Close" : "Create Post"}
                     </button>
+                  )}
                   </div>
 
                   {isCreatePostModalOpen && (
-                    <CreatePost familyId={id} fetchFamily = {fetchFamily} setIsCreatePostModalOpen={setIsCreatePostModalOpen} />
+                    <CreatePost
+                      familyId={id}
+                      fetchFamily={fetchFamily}
+                      setIsCreatePostModalOpen={setIsCreatePostModalOpen}
+                    />
                   )}
 
-                  {/* <div className="space-y-6">
-                    {posts.map((post) => (
-                      <div
-                        key={post.id}
-                        className="rounded-lg border border-gray-100 bg-gray-50 p-5 dark:border-gray-600 dark:bg-gray-700"
-                      >
-                        <div className="mb-3 flex items-center">
-                          <div className="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
-                            <span className="text-sm font-bold text-blue-700 dark:text-blue-300">
-                              {post.author.charAt(0)}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-800 dark:text-white">
-                              {post.author}
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              {post.timestamp}
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-gray-700 dark:text-gray-300">
-                          {post.content}
-                        </p>
-                        <div className="mt-4 flex gap-4">
-                          <button className="flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-blue-500 dark:text-gray-400">
-                            <svg
-                              className="h-4 w-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905V19c0 .47-.305.85-.68.98l-1.7.59A1.5 1.5 0 017 19V4.5"
-                              ></path>
-                            </svg>
-                            Like
-                          </button>
-                          <button className="flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-blue-500 dark:text-gray-400">
-                            <svg
-                              className="h-4 w-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                              ></path>
-                            </svg>
-                            Comment
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div> */}
-                   {!isCreatePostModalOpen && (
-                    posts.length > 0 ? (
-                      <Post posts={posts} familyId={id} fetchFamily = {fetchFamily} />
+                  {!isCreatePostModalOpen &&
+                    (posts.length > 0 ? (
+                      <Post
+                        posts={posts}
+                        familyId={id}
+                        setPosts={setPosts}
+                        currentUserRole={currentUserRole}
+                      />
                     ) : (
-                      <div className="flex flex-col items-center justify-center py-16 px-4 bg-gray-50/50 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-gray-300 hover:dark:border-gray-600">
-                        <div className="bg-gray-100 dark:bg-gray-700 p-5 rounded-full mb-5 shadow-inner">
-                        <Newspaper  size={28} className="text-gray-400 dark:text-gray-300" />
+                      <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/50 px-4 py-16 transition-all duration-300 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 hover:dark:border-gray-600">
+                        <div className="mb-5 rounded-full bg-gray-100 p-5 shadow-inner dark:bg-gray-700">
+                          <Newspaper
+                            size={28}
+                            className="text-gray-400 dark:text-gray-300"
+                          />
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                        <h3 className="mb-2 text-xl font-semibold text-gray-800 dark:text-gray-100">
                           No post created yet
                         </h3>
-                        <p className="text-gray-500 dark:text-gray-400 text-center max-w-md mb-6">
-                          Create your first post to start organizing gatherings with friends and family.
+                        <p className="mb-6 max-w-md text-center text-gray-500 dark:text-gray-400">
+                          Create your first post to start organizing gatherings
+                          with friends and family.
                         </p>
                       </div>
-                    )
-                  )}
-                  
-               
+                    ))}
                 </section>
               )}
 
@@ -376,46 +315,62 @@ const FamilyDetail = () => {
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                       Family Events
                     </h2>
+                  {canCreateContent(currentUserRole) &&(
                     <button
                       className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
                       onClick={() => handleCreateEvent()}
                     >
                       {isCreateEventModalOpen ? "Close" : "Create Event"}
                     </button>
+                  )}
                   </div>
 
                   {isCreateEventModalOpen && (
-                    <CreateEventForm familyId={id} familyMembers={[]} fetchFamily = {fetchFamily} setIsCreateEventModalOpen={setIsCreateEventModalOpen} />
+                    <CreateEventForm
+                      familyId={id}
+                      familyMembers={[]}
+                      fetchFamily={fetchFamily}
+                      setIsCreateEventModalOpen={setIsCreateEventModalOpen}
+                    />
                   )}
 
-                  {!isCreateEventModalOpen && (
-                    events.length > 0 ? (
-                      <Event events={events} familyId={id} fetchFamily = {fetchFamily} />
+                  {!isCreateEventModalOpen &&
+                    (events.length > 0 ? (
+                      <Event
+                        events={events}
+                        familyId={id}
+                        fetchFamily={fetchFamily}
+                        currentUserRole={currentUserRole}
+                      />
                     ) : (
-                      <div className="flex flex-col items-center justify-center py-16 px-4 bg-gray-50/50 dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-gray-300 hover:dark:border-gray-600">
-                        <div className="bg-gray-100 dark:bg-gray-700 p-5 rounded-full mb-5 shadow-inner">
-                        <Calendar size={28} className="text-gray-400 dark:text-gray-300" />
+                      <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/50 px-4 py-16 transition-all duration-300 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 hover:dark:border-gray-600">
+                        <div className="mb-5 rounded-full bg-gray-100 p-5 shadow-inner dark:bg-gray-700">
+                          <Calendar
+                            size={28}
+                            className="text-gray-400 dark:text-gray-300"
+                          />
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                        <h3 className="mb-2 text-xl font-semibold text-gray-800 dark:text-gray-100">
                           No events created yet
                         </h3>
-                        <p className="text-gray-500 dark:text-gray-400 text-center max-w-md mb-6">
-                          Create your first event to start organizing gatherings with friends and family.
+                        <p className="mb-6 max-w-md text-center text-gray-500 dark:text-gray-400">
+                          Create your first event to start organizing gatherings
+                          with friends and family.
                         </p>
                       </div>
-                    )
-                  )}
+                    ))}
                 </section>
               )}
 
               {/* Photos Tab */}
-              
+
               {activeTab === "photos" && (
-                <PhotoGallery 
+                <PhotoGallery
                   key={family.id}
                   photos={photos}
                   familyId={family.id}
-                  fetchFamily = {fetchFamily}
+                  fetchFamily={fetchFamily}
+                  currentUserRole={currentUserRole}
                 />
               )}
             </div>
