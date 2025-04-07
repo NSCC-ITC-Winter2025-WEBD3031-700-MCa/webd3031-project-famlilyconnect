@@ -60,3 +60,21 @@ export async function PUT(req: Request,{ params }: { params: { id: string } }){
     return new Response("Failed to update user", {status:500})
   }
 }
+
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+  try {
+    if (!params.id) {
+      return new Response("User Id not found", { status: 404 });
+    }
+
+    const prisma = new PrismaClient();
+    const deleteUser = await prisma.user.delete({
+      where: { id: params.id },
+    });
+
+    return new Response(JSON.stringify(deleteUser), { status: 200 });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return new Response("Failed to delete user", { status: 500 });
+  }
+}
