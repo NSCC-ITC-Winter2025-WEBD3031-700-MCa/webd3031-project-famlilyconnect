@@ -5,17 +5,6 @@ import { TrafficPatternsCard } from "@/components/admin/traffic-patterns"
 import { useEffect } from "react"
 import { useSession } from "next-auth/react"
 
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title:
-    "Admin Page | Family Connect – Bringing Loved Ones Closer",
-  icons: {
-    icon: "images/favicon.ico",
-  },
-};
-
-
 export default function Dashboard() {
 
   const { data: session, status } = useSession(); // Getting the session data
