@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -43,7 +42,7 @@ const Hero = () => {
               >
                 <div className="mt-16">
                   <Image
-                    src="/images/Hero/hero-image.jpg"
+                    src="/images/hero/hero-image.jpg"
                     alt="hero"
                     className="mx-auto max-w-full rounded-t-xl rounded-tr-xl"
                     width={845}
