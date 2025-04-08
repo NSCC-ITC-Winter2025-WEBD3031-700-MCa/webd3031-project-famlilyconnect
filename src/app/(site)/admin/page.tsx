@@ -50,20 +50,20 @@ export default function Dashboard() {
       <div className="grid grid-cols-3 gap-10 mt-5">
         <Card className="bg-white px-5 py-1">
           <div>
-            <h2 className="text-[20px] font-bold">Total Users</h2>
-            <p className="text-[14px] text-muted-foreground">10,000</p>
+            <h2 className="text-[20px] font-bold dark:text-black">Total Users</h2>
+            <p className="text-[14px] text-muted-foreground dark:text-black">10,000</p>
           </div>
         </Card>
         <Card className="bg-white px-5 py-1">
           <div>
-            <h2 className="text-[20px] font-bold">Total Orders</h2>
-            <p className="text-[14px] text-muted-foreground">1,000</p>
+            <h2 className="text-[20px] font-bold dark:text-black">Total Orders</h2>
+            <p className="text-[14px] text-muted-foreground dark:text-black">1,000</p>
           </div>
         </Card>
         <Card className="bg-white px-5 py-1">
           <div>
-            <h2 className="text-[20px] font-bold">Total Revenue</h2>
-            <p className="text-[14px] text-muted-foreground">$100,000</p>
+            <h2 className="text-[20px] font-bold dark:text-black">Total Revenue</h2>
+            <p className="text-[14px] text-muted-foreground dark:text-black">$100,000</p>
           </div>
         </Card>
       </div>
