@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title:
     "Profile Page",
   description: "This is Profile page description",
+  icons: {
+    icon: "images/favicon.ico",
+  },
 };
 
 const ProfilePage = () => {

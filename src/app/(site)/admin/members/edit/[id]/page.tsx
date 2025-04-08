@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 
-
 export default function EditUser() {
   const { id } = useParams();
   const [user, setUser] = useState<{ name: string; email: string; id: string; role: string } | null>(null);
