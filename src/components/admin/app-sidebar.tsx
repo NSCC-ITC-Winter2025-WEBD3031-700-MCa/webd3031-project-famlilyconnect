@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { NavUser } from "./nav-user"
+import { useSession } from "next-auth/react"
 
 // Menu items.
 const items = [
@@ -46,9 +47,10 @@ const items = [
   },
   {
     title: "Logout",
-    url: "#",
+    url: "/api/auth/signout",
     icon: LogOut,
-  }
+  },
+ 
 ]
 
 export function AppSidebar() {
