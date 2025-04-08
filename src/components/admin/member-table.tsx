@@ -7,8 +7,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { ButtonGroup } from "@/components/admin/button-group"
+} from "@/components/ui/table";
+import { ButtonGroup } from "@/components/admin/button-group";
 import { useEffect, useState } from 'react';
 import { Input } from "@/components/ui/input";
 import PagenationComponent from "@/components/admin/pagination";
@@ -21,8 +21,27 @@ interface User {
 }
 
 export default function UserTable() {
+  const [users, setUsers] = useState<User[]>([]); // Store fetched users
+  const [searchQuery, setSearchQuery] = useState<string>(''); // Store search query
+  const [filteredMembers, setFilteredMembers] = useState<User[]>([]); // Store filtered members
 
-  const [users, setUsers] = useState<User[]>([]);
+  // Handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    // Filter users based on search query
+    const filtered = users.filter((user) => {
+      return (
+        user.name.toLowerCase().includes(query.toLowerCase()) || // Search by name
+        user.email.toLowerCase().includes(query.toLowerCase())   // Or search by email
+      );
+    });
+
+    setFilteredMembers(filtered); // Set filtered members
+  };
+
+  // Fetch users from the API
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -30,14 +49,13 @@ export default function UserTable() {
         const data = await res.json();
         console.log("Fetched users:", data); 
         setUsers(data);
+        setFilteredMembers(data); // Initially, show all users
       } catch (err) {
         console.error('Error fetching members:', err);
       }
     };
-
     fetchUsers();
   }, []);
-
 
   return (
     <div className="w-full">
