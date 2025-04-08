@@ -5,7 +5,7 @@ import SingleTeam from "./SingleTeam";
 const teamData: TeamType[] = [
   {
     id: 1,
-    name: "Yue-Skinner Dominique",
+    name: "Dominique Yue-Skinner ",
     designation: "App Developer",
     image: "/images/team/team-00.png",
     facebookLink: "/#",
@@ -14,7 +14,7 @@ const teamData: TeamType[] = [
   },
   {
     id: 2,
-    name: "Gajjar Hiren",
+    name: "Hiren Gajjar ",
     designation: "App Developer",
     image: "/images/team/team-00.png",
     facebookLink: "/#",
