@@ -9,7 +9,7 @@ const Features = () => {
         <SectionTitle
           subtitle="Features"
           title="Main Features Of Play"
-          paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+          paragraph="There are many variations of family-related activities and events available, but most have undergone adjustments in one form or another to suit the needs of each family."
         />
 
         <div className="-mx-4 mt-12 flex flex-wrap lg:mt-20">

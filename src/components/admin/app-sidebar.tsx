@@ -15,8 +15,6 @@ import { NavUser } from "./nav-user"
 import { useEffect } from "react"
 import { useSession } from "next-auth/react"
 
-
-
 // Menu items.
 const items = [
   {
@@ -49,7 +47,11 @@ const items = [
     url: "#",
     icon: Settings,
   },
-
+  {
+    title: "Logout",
+    url: "/api/auth/signout",
+    icon: LogOut,
+  },
 ]
 
 export function AppSidebar() {

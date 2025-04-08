@@ -12,35 +12,34 @@ const Faq = () => {
           width="640px"
           center
         />
-
         <div className="-mx-4 mt-[60px] flex flex-wrap lg:mt-20">
           <div className="w-full px-4 lg:w-1/2">
             <SingleFaq
-              question="How to use TailGrids?"
-              answer="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              question="How does the family tree feature work?"
+              answer="Our family tree feature allows you to easily map relationships across generations. Simply add family members, specify their relationships, and the platform automatically creates an interactive visual tree. You can add photos, important dates, and personal stories for each member, creating a living document of your family history."
             />
             <SingleFaq
-              question="How to download icons from LineIcons?"
-              answer="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              question="Can we share photos and videos privately with only family members?"
+              answer="Absolutely! Our private sharing feature ensures that memories stay within the family. You can create different sharing groups for immediate family, extended relatives, or specific events. All media is encrypted and stored securely, with customizable permission settings so you control exactly who sees what."
             />
             <SingleFaq
-              question="Is GrayGrids part of UIdeck?"
-              answer="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              question="How do we set up regular family video calls?"
+              answer="Setting up family video calls is simple. Create a recurring event in the family calendar, select participants, and our system will send automatic reminders. The built-in video platform works across all devices and supports up to 50 family members simultaneously, making virtual reunions easy and stress-free."
             />
           </div>
 
           <div className="w-full px-4 lg:w-1/2">
             <SingleFaq
-              question="Can I use this template for commercial project?"
-              answer="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              question="Can we document and share family recipes?"
+              answer="Yes! Our recipe sharing feature is one of our most popular tools. You can digitize handwritten family recipes, add photos of finished dishes, and even record video tutorials. Each recipe can include notes about its history and significance, creating a digital cookbook that preserves your family's culinary heritage."
             />
             <SingleFaq
-              question="Do you have plan to releasing Play Pro?"
-              answer="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              question="Is there a way to plan family reunions through the platform?"
+              answer="Our reunion planning tools make organizing family gatherings effortless. Create an event, send invitations, track RSVPs, coordinate accommodations, and assign responsibilities all in one place. The collaborative planning board allows family members to contribute ideas and vote on activities."
             />
             <SingleFaq
-              question="Where and how to host this template?"
-              answer="It takes 2-3 weeks to get your first blog post ready. That includes the in-depth research & creation of your monthly content marketing strategy that we do before writing your first blog post, Ipsum available ."
+              question="How secure is our family's personal information?"
+              answer="We take your family's privacy seriously. All data is encrypted using bank-level security protocols, and we never share your information with third parties. Each family member controls their own privacy settings, and parents have additional controls for children's accounts. We also offer two-factor authentication for added security."
             />
           </div>
         </div>
