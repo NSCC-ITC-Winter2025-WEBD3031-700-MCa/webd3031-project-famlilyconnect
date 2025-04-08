@@ -3,6 +3,14 @@ import MemberTable from '@/components/admin/member-table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import PaginationComponent from '@/components/admin/pagination';
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Member Page | Family Connect – Bringing Loved Ones Closer",
+  icons: {
+    icon: "images/favicon.ico",
+  },
+};
 
 export default function Members() {
   return(

@@ -1,6 +1,9 @@
 'use client';
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { Metadata } from "next";
+
+
 
 export default function ViewUser() {
   const { id } = useParams();

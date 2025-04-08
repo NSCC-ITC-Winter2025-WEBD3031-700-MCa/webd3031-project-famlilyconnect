@@ -1,6 +1,14 @@
 import { Card } from "@/components/ui/card"
 import { UserEngagementCard } from "@/components/admin/user-engagement"
 import { TrafficPatternsCard } from "@/components/admin/traffic-patterns"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Admin Page | Family Connect – Bringing Loved Ones Closer",
+  icons: {
+    icon: "images/favicon.ico", 
+  },
+};
 
 export default function Dashboard() {
   return (
