@@ -1,34 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe"; // Ensure this imports your initialized Stripe instance
 import Stripe from "stripe";
-import { Readable } from "stream";
 import { prisma } from "@/utils/prismaDB"; // Import your Prisma client instance
 
-// Stripe requires raw body parsing
-export const config = {
-  api: { bodyParser: false },
-};
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!; // Stripe secret key and webhook secret set in your environment variables
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
-//Helper function to convert a Readable stream to a string
-async function buffer(readable: Readable) {
-  const chunks = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks);
-}
-
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const rawBody = await req.text(); // raw body for stripe signature
-  const sig = req.headers.get('stripe-signature') as string;
-
-  
+  const sig = req.headers.get("stripe-signature") as string; // Get the Stripe signature from the request headers
 
   let event: Stripe.Event;
   console.log("Received Stripe webhook event:", rawBody);
+
+  // if (!sig || !endpointSecret) {
+  //   console.error("⚠️ Missing signature or webhook secret");
+  //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // }
 
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
@@ -38,6 +25,9 @@ export async function POST(req: Request) {
     // return NextResponse.json({ error: "Webhook Error" }, { status: 400 });
     return new NextResponse(`Webhook Error: ${(err as Error).message}`, {
       status: 400,
+      // headers: {
+      //   "Content-Type": "application/json",
+      // },
     });
   }
 
@@ -45,8 +35,9 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
-
     console.log("Session Data:", session);
+
+
     const subscriptionId = session.subscription as string;
     const userId = session.metadata?.userId;
     const priceId = session.metadata?.priceId;
@@ -57,9 +48,9 @@ export async function POST(req: Request) {
     }
 
     try {
-      // subscription object from Stripe
+      // Get the subscription object from Stripe
       const stripeSub = await stripe.subscriptions.retrieve(subscriptionId);
-
+      // Retrieve subscription details if needed
       console.log("Stripe Subscription:", stripeSub);    
 
       // Save subscription in DB
@@ -81,12 +72,6 @@ export async function POST(req: Request) {
           startDate: new Date(stripeSub.start_date * 1000),
           endDate: new Date(stripeSub.current_period_end * 1000),
         },
-      });
-
-      // ✅ Update the user to set isPremium = true
-      await prisma.user.update({
-        where: { id: userId },
-        data: { isPremium: true },
       });
 
       console.log("✅ Subscription saved successfully");
@@ -115,3 +100,8 @@ export async function POST(req: Request) {
 
   return new NextResponse("Unhandled event type", { status: 200 });
 }
+
+// Stripe requires raw body parsing
+export const config = {
+  api: { bodyParser: false },
+};
