@@ -4,8 +4,11 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Contact Page | Play SaaS Starter Kit and Boilerplate for Next.js",
+    "Contact Page | Family Connect – Bringing Loved Ones Closer",
   description: "This is contact page description",
+  icons: {
+    icon: "images/favicon.ico", 
+  },
 };
 
 const ContactPage = () => {

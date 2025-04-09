@@ -4,7 +4,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Sign Up | Play SaaS Starter Kit and Boilerplate for Next.js",
+    "Sign Up | Join Family Connect – Bringing Loved Ones Closer",
+    icons: {
+      icon: "images/favicon.ico", 
+    },
 };
 
 const SignupPage = () => {

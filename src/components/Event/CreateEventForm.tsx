@@ -174,7 +174,7 @@ const CreateEventForm = ({ familyId, familyMembers, fetchFamily, setIsCreateEven
         />
       </div>
 
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <label htmlFor="assignedTo" className={labelClasses}>
           Primary Organizer (optional)
         </label>
@@ -192,7 +192,7 @@ const CreateEventForm = ({ familyId, familyMembers, fetchFamily, setIsCreateEven
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
 
       <input type="hidden" name="familyId" value={familyId} />
 
