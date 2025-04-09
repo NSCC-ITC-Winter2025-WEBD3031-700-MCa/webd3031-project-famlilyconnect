@@ -9,8 +9,8 @@ export async function GET(req: Request, context: any ){
       return new Response("User Id not found", {status:404})
     }
     const prisma = new PrismaClient();
-    const userPosts = await prisma.post.findUnique({
-      where: { id: id },
+    const userPosts = await prisma.post.findMany({
+      where: { authorId: id },
       select: {
         id: true,
         content: true,
