@@ -22,16 +22,7 @@ const Hero = () => {
                   shared calendars, and private family spaces. Never miss important moments 
                   with the people who matter most.
                 </p>
-                {/* <ul className="mb-10 flex flex-wrap items-center justify-center gap-5">
-                  <li>
-                    <Link
-                      href="/signup"
-                      className="inline-flex items-center justify-center rounded-md bg-white px-7 py-[14px] text-center text-base font-medium text-dark shadow-1 transition duration-300 ease-in-out hover:bg-gray-2"
-                    >
-                      Get Started Free
-                    </Link>
-                  </li>
-                </ul> */}
+                
               </div>
             </div>
 
@@ -41,13 +32,14 @@ const Hero = () => {
                 data-wow-delay=".25s"
               >
                 <div className="mt-16">
-                  <Image
-                    src="/images/hero/hero-image.jpg"
-                    alt="hero"
-                    className="mx-auto max-w-full rounded-t-xl rounded-tr-xl"
-                    width={845}
-                    height={316}
-                  />
+                <Image
+                  src="/images/hero/hero-image.jpg"
+                  alt="hero"
+                  width={845}
+                  height={316}
+                  priority
+                  className="mx-auto w-full h-auto rounded-t-xl"
+                />
                 </div>
                 <div className="absolute -left-9 bottom-0 z-[-1]">
                   <svg
