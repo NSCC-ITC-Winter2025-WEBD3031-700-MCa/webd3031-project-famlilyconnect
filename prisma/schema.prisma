@@ -71,6 +71,7 @@ model User {
   Invitation   Invitation[]
 
   subscription Subscription?
+  isPremium Boolean @default(false)
 }
 
 model FamilyMember {

@@ -8,15 +8,11 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!; // Stripe secret key 
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text(); // raw body for stripe signature
-  const sig = req.headers.get("stripe-signature") as string; // Get the Stripe signature from the request headers
+  const sig = req.headers.get('stripe-signature') as string; // Get the Stripe signature from the request headers
+  
 
   let event: Stripe.Event;
   console.log("Received Stripe webhook event:", rawBody);
-
-  // if (!sig || !endpointSecret) {
-  //   console.error("⚠️ Missing signature or webhook secret");
-  //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  // }
 
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
@@ -26,9 +22,6 @@ export async function POST(req: NextRequest) {
     // return NextResponse.json({ error: "Webhook Error" }, { status: 400 });
     return new NextResponse(`Webhook Error: ${(err as Error).message}`, {
       status: 400,
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
     });
   }
 
@@ -36,9 +29,8 @@ export async function POST(req: NextRequest) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
+
     console.log("Session Data:", session);
-
-
     const subscriptionId = session.subscription as string;
     const userId = session.metadata?.userId;
     const priceId = session.metadata?.priceId;
@@ -73,6 +65,12 @@ export async function POST(req: NextRequest) {
           startDate: new Date(stripeSub.start_date * 1000),
           endDate: new Date(stripeSub.current_period_end * 1000),
         },
+      });
+
+      // ✅ Update the user to set isPremium = true
+      await prisma.user.update({
+        where: { id: userId },
+        data: { isPremium: true },
       });
 
       console.log("✅ Subscription saved successfully");
