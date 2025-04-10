@@ -34,6 +34,14 @@ type UserInfo = {
       };
     };
   }[];
+  subscription: {
+    id: string;
+    status: string;
+    stripeSubscriptionId: string;
+    priceId: string;
+    startDate: Date;
+    endDate: Date | null;
+  };
 };
 
 export default function ProfilePage() {
@@ -373,6 +381,29 @@ export default function ProfilePage() {
                       Security
                     </button>
                   </li>
+                  <li>
+                    <button
+                      onClick={() => setActiveTab("subscription")}
+                      className={`flex w-full items-center rounded-lg px-4 py-3 text-left transition duration-200 ${
+                        activeTab === "subscription" ? "bg-blue-50 font-medium text-blue-600" : "text-gray-700 hover:bg-gray-50 dark:text-white dark:hover:bg-gray-700"
+                      }`}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="mr-3 h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 3C5.58 3 2 6.58 2 10s3.58 7 8 7 8-3.58 8-7-3.58-7-8-7zm0 12c-2.47 0-4.5-1.69-5.25-4h10.5c-.75 2.31-2.78 4-5.25 4zM10 5c2.76 0 5 2.24 5 5h-10c0-2.76 2.24-5 5-5z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Subscription
+                    </button>
+                  </li>
+
                 </ul>
               </nav>
             </div>
@@ -637,6 +668,73 @@ export default function ProfilePage() {
                   </div>
                 </div>
               )}
+
+              {/* Subscription Tab */}
+                {activeTab === "subscription" && (
+                  <div>
+                    <h2 className="mb-6 text-2xl font-bold text-black dark:text-white">
+                      Subscription Details
+                    </h2>
+                    <div className="space-y-6">
+                      <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-lg font-medium text-black dark:text-white">
+                              Status
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-400">
+                              {userInfo?.subscription ? userInfo.subscription.status : "No active subscription"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-lg font-medium text-black dark:text-white">
+                              Plan
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-400">
+                              {userInfo?.subscription ? userInfo.subscription.priceId : "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-lg font-medium text-black dark:text-white">
+                              Start Date
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-400">
+                              {userInfo?.subscription
+                                ? new Date(userInfo.subscription.startDate).toLocaleDateString()
+                                : "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-lg font-medium text-black dark:text-white">
+                              End Date
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-400">
+                              {userInfo?.subscription?.endDate
+                                ? new Date(userInfo.subscription.endDate).toLocaleDateString()
+                                : "Ongoing"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
             </div>
           </div>
         </div>
