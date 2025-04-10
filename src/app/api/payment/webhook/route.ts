@@ -1,15 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe"; // Ensure this imports your initialized Stripe instance
-import Stripe from "stripe";
-import { prisma } from "@/utils/prismaDB"; // Import your Prisma client instance
-
 export const runtime = "nodejs";
-// This is important for the webhook to work correctly in Next.js 13+
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+import { NextRequest, NextResponse } from "next/server";
+import { stripe } from "@/lib/stripe"; // Ensure this imports your initialized Stripe instance
+import Stripe from "stripe";
+import { prisma } from "@/utils/prismaDB"; // Import your Prisma client instance
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!; // Stripe secret key and webhook secret set in your environment variables
 
