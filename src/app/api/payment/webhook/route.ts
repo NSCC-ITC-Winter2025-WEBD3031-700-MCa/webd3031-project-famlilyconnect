@@ -1,23 +1,16 @@
-export const runtime = "nodejs";
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe"; // Ensure this imports your initialized Stripe instance
 import Stripe from "stripe";
 import { prisma } from "@/utils/prismaDB"; // Import your Prisma client instance
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!; // Stripe secret key and webhook secret set in your environment variables
 
 export async function POST(req: NextRequest) {
-  const rawBody = await req.text(); // raw body for stripe signature
+  const body = await req.text(); // raw body for stripe signature
   const sig = req.headers.get("stripe-signature") as string; // Get the Stripe signature from the request headers
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!; // Stripe secret key and webhook secret set in your environment variables
 
   let event: Stripe.Event;
-  console.log("Received Stripe webhook event:", rawBody);
+  console.log("Received Stripe webhook event:", body);
 
   // if (!sig || !endpointSecret) {
   //   console.error("⚠️ Missing signature or webhook secret");
@@ -25,7 +18,7 @@ export async function POST(req: NextRequest) {
   // }
 
   try {
-    event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
     console.log("Event", event);
   } catch (err: any) {
     console.error("⚠️ Webhook verification failed:", err.message);
@@ -108,7 +101,7 @@ export async function POST(req: NextRequest) {
   return new NextResponse("Unhandled event type", { status: 200 });
 }
 
-// // Stripe requires raw body parsing
-// export const config = {
-//   api: { bodyParser: false },
-// };
+// Stripe requires raw body parsing
+export const config = {
+  api: { bodyParser: false },
+};
