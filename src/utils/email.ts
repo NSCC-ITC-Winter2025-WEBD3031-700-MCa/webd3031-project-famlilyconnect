@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import sgMail from '@sendgrid/mail';
 
 type EmailPayload = {
   to: string;
@@ -7,24 +7,28 @@ type EmailPayload = {
   replyTo?: string;
 };
 
-
-const smtpOptions = {
-  host: process.env.EMAIL_SERVER_HOST,
-  port: parseInt(process.env.EMAIL_SERVER_PORT || "2525"),
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_SERVER_USER,
-    pass: process.env.EMAIL_SERVER_PASSWORD,
-  },
-};
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export const sendEmail = async (data: EmailPayload) => {
-  const transporter = nodemailer.createTransport({
-    ...smtpOptions,
-  });
+  const msg = {
+    to: data.to,
+    from: {
+      email: process.env.EMAIL_FROM!, 
+      name: "Family App Connect",
+    },
+    subject: data.subject,
+    html: data.html,
+    replyTo: data.replyTo || undefined,
+  };
 
-  return await transporter.sendMail({
-    from: `"Family App Connect" <${process.env.EMAIL_FROM}>`,
-    ...data,
-  });
+  try {
+    await sgMail.send(msg);
+    console.log("Email sent");
+  } catch (error) {
+    console.error("SendGrid error:", error);
+    if (error instanceof Error && (error as any).response) {
+      console.error((error as any).response.body);
+    }
+    throw new Error("Failed to send email");
+  }
 };
