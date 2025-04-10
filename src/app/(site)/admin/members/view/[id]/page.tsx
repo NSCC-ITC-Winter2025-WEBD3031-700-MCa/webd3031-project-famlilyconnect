@@ -132,8 +132,7 @@ export default function ViewUser() {
 
 {/* user posts data  */}
 {userPosts.length > 0 ? (
-  userPosts.map((userPost) => userPost && (
-    <div key={userPost.id} className="w-full bg-white shadow-lg rounded-lg overflow-hidden mt-2">
+  <div className="w-full bg-white shadow-lg rounded-lg overflow-hidden mt-2">
 <div className="px-6 py-4">
         <h2 className="text-xl font-semibold text-gray-800">Posts</h2>
         <table className="w-full mt-4 border-collapse border border-gray-200">
@@ -147,19 +146,20 @@ export default function ViewUser() {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b">
+            {userPosts.map((userPost) => userPost && (
+            <tr key={userPost.id} className="border-b">
               <td className="px-4 py-2 text-gray-900">{userPost.id}</td>
               <td className="px-4 py-2 text-gray-900">{userPost.content}</td>
               <td className="px-4 py-2 text-gray-900">{userPost.authorId}</td>
               <td className="px-4 py-2 text-gray-900">{userPost.familyId}</td>
               <td className="px-4 py-2 text-gray-900 text-end">{userPost.createdAt.toLocaleString()}</td>
             </tr>
+            ))}
           </tbody>
       
         </table>
       </div>
     </div>
-  ))
 ) : (
   <p className="text-center text-gray-500">Loading user posts data...</p>
 )}
