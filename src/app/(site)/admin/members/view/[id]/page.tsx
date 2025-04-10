@@ -10,6 +10,7 @@ export default function ViewUser() {
   const [user, setUser] = useState<{ name: string; email: string; id: string; role: string } | null>(null);
   const [familyMembers, setFamilyMembers] = useState<Array<{ id: string; userId: string; familyId: string; role: string; isMainFamily: boolean } | null>>([]);
   const [userPosts, setUserPosts] = useState<Array<{ id: string; content: string; authorId: string; familyId: string; createdAt: Date } | null>>([]);
+  const [photos, setPhotos] = useState<Array<{ id: string; url: string; uploaderId: string; familyId: string; createdAt: Date } | null>>([]);
 
   // fetch user data from database 
   useEffect(() => {
@@ -57,6 +58,22 @@ export default function ViewUser() {
       }
   }
     fetchUserPosts();
+  }, [id]);
+
+  // fetch user photos from database
+  useEffect(() => {
+    if(!id) return;
+    async function fetchUserPhotos() {
+      try{
+        const res = await fetch(`/api/members/${id}/userphotos`);
+        if(!res.ok) throw new Error("Failed to fetch user photos");
+        const data = await res.json();
+        setPhotos(data);
+      }catch(error){
+        console.error("Error fetching user photos:", error);
+      }
+    }
+    fetchUserPhotos();
   }, [id]);
 
   return (
@@ -163,6 +180,43 @@ export default function ViewUser() {
 ) : (
   <p className="text-center text-gray-500">Loading user posts data...</p>
 )}
+
+{/* user photos data */}
+{photos.length > 0 ? (
+    <div className="w-full bg-white shadow-lg rounded-lg mt-2">
+      <div className="px-6 py-4">
+        <h2 className="text-xl font-semibold text-gray-800">User Photos</h2>
+
+        {/* Wrapping the table with a div that makes it horizontally scrollable */}
+        <div className="overflow-x-auto w-full">
+          <table className="min-w-max mt-4 border-collapse border border-gray-200">
+            <thead>
+              <tr className="border-b">
+                <th className="px-4 py-2 font-medium text-gray-600">ID</th>
+                <th className="px-4 py-2 font-medium text-gray-600">URL</th>
+                <th className="px-4 py-2 font-medium text-gray-600">Uploader ID</th>
+                <th className="px-4 py-2 font-medium text-gray-600">Family ID</th>
+                <th className="px-4 py-2 font-medium text-gray-600">Created At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {photos.map(photo => photo && (
+                <tr key={photo.id} className="border-b">
+                  <td className="px-4 py-2 text-gray-900">{photo.id}</td>
+                  <td className="px-4 py-2 text-gray-900">{photo.url}</td>
+                  <td className="px-4 py-2 text-gray-900">{photo.uploaderId}</td>
+                  <td className="px-4 py-2 text-gray-900">{photo.familyId}</td>
+                  <td className="px-4 py-2 text-gray-900">{new Date(photo.createdAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <p className="text-center text-gray-500">Loading user photos data...</p>
+  )}
 
 
     </>
