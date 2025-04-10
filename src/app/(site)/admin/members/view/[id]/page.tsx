@@ -77,14 +77,14 @@ export default function ViewUser() {
   }, [id]);
 
   return (
-    <>
+    <div className="overflow-x-hidden bg-white shadow-lg">
     {/* user data  */}
-    
+    <div className="grid grid-cols-2 gap-1 w-[100%]mt-2">
+
   {user ? (
-    <div className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
     <div className="px-6 py-4">
       <h2 className="text-xl font-semibold text-gray-800">User Details</h2>
-      <table className="w-full mt-4 border-collapse border border-gray-200">
+      <table className="w-auto mt-4 border-collapse border border-gray-200 shadow-lg">
         <tbody>
           <tr className="border-b">
             <td className="px-4 py-2 font-medium text-gray-600">ID</td>
@@ -105,7 +105,6 @@ export default function ViewUser() {
         </tbody>
       </table>
     </div>
-  </div>
 ) : (
   <p className="text-center text-gray-500">Loading user data...</p>
 )}
@@ -113,10 +112,10 @@ export default function ViewUser() {
 {/* family member data  */}
 {familyMembers.length > 0 ? (
   familyMembers.map((familyMember) => familyMember && (
-    <div key={familyMember.id} className="w-full bg-white shadow-lg rounded-lg overflow-hidden mt-2">
-      <div className="px-6 py-4">
+    <div key={familyMember.id}>
+      <div className="px-6 py-4 ">
         <h2 className="text-xl font-semibold text-gray-800">Family Member</h2>
-        <table className="w-full mt-4 border-collapse border border-gray-200">
+        <table className="mt-4 border-collapse border border-gray-200 shadow-lg">
           <tbody>
             <tr className="border-b">
               <td className="px-4 py-2 font-medium text-gray-600">ID</td>
@@ -146,12 +145,13 @@ export default function ViewUser() {
 ) : (
   <p className="text-center text-gray-500">Loading family member data...</p>
 )}
+</div>
 
 {/* user posts data  */}
 {userPosts.length > 0 ? (
-  <div className="w-full bg-white shadow-lg rounded-lg overflow-hidden mt-2">
-<div className="px-6 py-4">
-        <h2 className="text-xl font-semibold text-gray-800">Posts</h2>
+  <div className="w-[100%] bg-white shadow-lg rounded-lg overflow-hidden mt-2 p-2">
+<div className="">
+        <h2 className="text-xl font-semibold text-gray-800 ps-3">Posts</h2>
         <table className="w-full mt-4 border-collapse border border-gray-200">
           <thead>
             <tr className="border-b">
@@ -183,13 +183,13 @@ export default function ViewUser() {
 
 {/* user photos data */}
 {photos.length > 0 ? (
-    <div className="w-full bg-white shadow-lg rounded-lg mt-2">
+    <div className="w-[100%] bg-white shadow-lg rounded-lg mt-2">
       <div className="px-6 py-4">
         <h2 className="text-xl font-semibold text-gray-800">User Photos</h2>
 
         {/* Wrapping the table with a div that makes it horizontally scrollable */}
-        <div className="overflow-x-auto w-full">
-          <table className="min-w-max mt-4 border-collapse border border-gray-200">
+        <div className="overflow-x-auto">
+          <table className="mt-4 border-collapse border border-gray-200">
             <thead>
               <tr className="border-b">
                 <th className="px-4 py-2 font-medium text-gray-600">ID</th>
@@ -202,12 +202,12 @@ export default function ViewUser() {
             <tbody>
               {photos.map(photo => photo && (
                 <tr key={photo.id} className="border-b">
-                  <td className="px-4 py-2 text-gray-900">{photo.id}</td>
-                  <td className="px-4 py-2 text-gray-900">{photo.url}</td>
-                  <td className="px-4 py-2 text-gray-900">{photo.uploaderId}</td>
-                  <td className="px-4 py-2 text-gray-900">{photo.familyId}</td>
-                  <td className="px-4 py-2 text-gray-900">{new Date(photo.createdAt).toLocaleString()}</td>
-                </tr>
+                <td className="px-4 py-2 text-gray-900">{photo.id}</td>
+                <td className="px-4 py-2 text-gray-900 break-words max-w-[200px]">{photo.url}</td>
+                <td className="px-4 py-2 text-gray-900">{photo.uploaderId}</td>
+                <td className="px-4 py-2 text-gray-900">{photo.familyId}</td>
+                <td className="px-4 py-2 text-gray-900">{new Date(photo.createdAt).toLocaleString()}</td>
+              </tr>
               ))}
             </tbody>
           </table>
@@ -219,6 +219,6 @@ export default function ViewUser() {
   )}
 
 
-    </>
+    </div>
   );
 }
