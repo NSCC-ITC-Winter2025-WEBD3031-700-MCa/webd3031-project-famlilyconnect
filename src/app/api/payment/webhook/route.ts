@@ -3,6 +3,14 @@ import { stripe } from "@/lib/stripe"; // Ensure this imports your initialized S
 import Stripe from "stripe";
 import { prisma } from "@/utils/prismaDB"; // Import your Prisma client instance
 
+export const runtime = "nodejs";
+// This is important for the webhook to work correctly in Next.js 13+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!; // Stripe secret key and webhook secret set in your environment variables
 
 export async function POST(req: NextRequest) {
@@ -101,7 +109,7 @@ export async function POST(req: NextRequest) {
   return new NextResponse("Unhandled event type", { status: 200 });
 }
 
-// Stripe requires raw body parsing
-export const config = {
-  api: { bodyParser: false },
-};
+// // Stripe requires raw body parsing
+// export const config = {
+//   api: { bodyParser: false },
+// };
