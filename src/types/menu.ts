@@ -5,4 +5,5 @@ export type Menu = {
   newTab: boolean;
   requiresAdmin?: boolean;
   submenu?: Menu[];
+  requiresSignIn?: boolean;
 };

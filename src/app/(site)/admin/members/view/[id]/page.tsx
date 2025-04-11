@@ -11,6 +11,7 @@ export default function ViewUser() {
   const [familyMembers, setFamilyMembers] = useState<Array<{ id: string; userId: string; familyId: string; role: string; isMainFamily: boolean } | null>>([]);
   const [userPosts, setUserPosts] = useState<Array<{ id: string; content: string; authorId: string; familyId: string; createdAt: Date } | null>>([]);
   const [photos, setPhotos] = useState<Array<{ id: string; url: string; uploaderId: string; familyId: string; createdAt: Date } | null>>([]);
+  const [family, setFamily] = useState<Array<{ id: string; name: string; } | null>>([]);
 
   // fetch user data from database 
   useEffect(() => {
@@ -74,6 +75,21 @@ export default function ViewUser() {
       }
     }
     fetchUserPhotos();
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+    async function fetchFamily() {
+      try {
+        const res = await fetch(`/api/members/${id}/family`);
+        if (!res.ok) throw new Error("Failed to fetch family");
+        const data = await res.json();
+        setFamily(data);
+      } catch (error) {
+        console.error("Error fetching family:", error);
+      }
+    }
+    fetchFamily();
   }, [id]);
 
   return (
@@ -145,7 +161,34 @@ export default function ViewUser() {
 ) : (
   <p className="text-center text-gray-500">Loading family member data...</p>
 )}
+{/* family data  */}
+{family.length > 0 ? (
+  <div className="px-6 py-4">
+    <h2 className="text-xl font-semibold text-gray-800">Family Details</h2>
+    <table className="mt-4 border-collapse border border-gray-200 shadow-lg">
+      <tbody>
+        {family.map((fam) => fam && (
+          <tr key={fam.id} className="border-b">
+          <tr className="border-b">
+            <td className="px-4 py-2 font-medium text-gray-600">Family ID</td>
+            <td className="px-4 py-2 text-gray-900">{fam.id}</td>
+          </tr>
+          <tr>
+            <td className="px-4 py-2 font-medium text-gray-600">Family Name</td>
+            <td className="px-4 py-2 text-gray-900">{fam.name}</td>
+          </tr>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+) : (
+  <p className="text-center text-gray-500">Loading family data...</p>
+)}
 </div>
+
+
+
 
 {/* user posts data  */}
 {userPosts.length > 0 ? (
