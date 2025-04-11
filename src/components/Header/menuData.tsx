@@ -25,6 +25,7 @@ const menuData: Menu[] = [
     title: "Family",
     path: "/family",
     newTab: false,
+    requiresSignIn: true
   },
   {
     id: 8,

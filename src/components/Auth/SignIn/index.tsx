@@ -1,14 +1,15 @@
 "use client";
-import { signIn } from "next-auth/react";
+import Loader from "@/components/Common/Loader";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import MagicLink from "../MagicLink";
 import SocialSignIn from "../SocialSignIn";
 import SwitchOption from "../SwitchOption";
-import MagicLink from "../MagicLink";
-import Loader from "@/components/Common/Loader";
+
 
 const Signin = () => {
   const router = useRouter();
@@ -22,30 +23,36 @@ const Signin = () => {
   const [isPassword, setIsPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const loginUser = (e: any) => {
+  const { data: session, status, update } = useSession();
+
+  const loginUser = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
-    signIn("credentials", { ...loginData, redirect: false })
-      .then((callback) => {
-        if (callback?.error) {
-          toast.error(callback?.error);
-          console.log(callback?.error);
-          setLoading(false);
-          return;
-        }
-
-        if (callback?.ok && !callback?.error) {
-          toast.success("Login successful");
-          setLoading(false);
-          router.push("/family");
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err.message);
-        toast.error(err.message);
+  
+    try {
+      const callback = await signIn("credentials", { 
+        ...loginData, 
+        redirect: false,
+        callbackUrl: "/family"
       });
+  
+      if (callback?.error) {
+        throw new Error(callback.error);
+      }
+  
+    
+      await update(); 
+      window.location.href = "/family"; 
+      
+    } catch (err) {
+      setLoading(false);
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("An unknown error occurred.");
+      }
+      console.error("Login error:", err);
+    }
   };
 
   return (

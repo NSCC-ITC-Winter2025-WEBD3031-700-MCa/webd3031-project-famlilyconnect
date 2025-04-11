@@ -38,6 +38,7 @@ const ManageFamily = () => {
 
   const fetchFamilies = async () => {
     setIsLoading(true);
+  
     try {
       const response = await fetch('/api/family');
       const data = await response.json();
