@@ -74,6 +74,12 @@ export async function POST(req: NextRequest) {
         },
       });
 
+      // Now, update the `isPremium` field in the User model
+      await prisma.user.update({
+        where: { id: userId },
+        data: { isPremium: true }, // Set `isPremium` to `true` when user subscribes
+      });
+
       console.log("✅ Subscription saved successfully");
 
       return NextResponse.json({ received: true });
