@@ -16,6 +16,13 @@ export async function GET() {
     },
   });
 
+  if (subscription?.status === "active") {
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: { isPremium: true },
+    });
+  }
+
   return NextResponse.json({
     isSubscribed: subscription?.status === "active",
   });
