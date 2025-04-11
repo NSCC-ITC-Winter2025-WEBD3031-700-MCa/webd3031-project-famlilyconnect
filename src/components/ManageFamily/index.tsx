@@ -58,6 +58,7 @@ const ManageFamily = () => {
       const response = await fetch('/api/family');
       const data = await response.json();
       if (response.ok) {
+        // console.log('Families:', data);
         if (data.length > 0) {
           setCreatorFamilyId(data[0].id);
         }
