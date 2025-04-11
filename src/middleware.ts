@@ -5,7 +5,9 @@ import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
 
+  console.log('Middleware running - path:', req.nextUrl.pathname);
   const token = await getToken({ req, secret: process.env.SECRET });
+  console.log('Token exists:', !!token);
 
 
   const protectedRoutes = ['/family', '/admin']; 
