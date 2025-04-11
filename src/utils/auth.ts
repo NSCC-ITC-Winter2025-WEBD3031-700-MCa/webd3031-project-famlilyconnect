@@ -59,6 +59,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Incorrect password");
         }
 
+        console.log("user", user);
         return user;
       },
     }),

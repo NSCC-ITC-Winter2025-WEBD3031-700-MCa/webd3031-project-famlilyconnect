@@ -7,6 +7,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import DeleteAccount from "../DeleteAccount";
 
+
 const getUserDetails = async (id: string) => {
   try {
     const res = await fetch(`/api/profile/${id}`);
@@ -57,12 +58,16 @@ export default function ProfilePage() {
   const id = params.id as string;
   const router = useRouter();
 
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [groupToLeave, setGroupToLeave] = useState<string | null>();
 
   useEffect(() => {
     if (!id) return;
+    if (!session) {
+      router.push('/');
+    }
     const fetchUserProfile = async () => {
       setIsLoading(true);
       const data = await getUserDetails(id);
