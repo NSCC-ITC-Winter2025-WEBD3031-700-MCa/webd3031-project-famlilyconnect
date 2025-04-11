@@ -8,7 +8,7 @@ const Features = () => {
       <div className="container">
         <SectionTitle
           subtitle="Features"
-          title="Main Features Of Play"
+          title="Main Features Of Family Connect"
           paragraph="There are many variations of family-related activities and events available, but most have undergone adjustments in one form or another to suit the needs of each family."
         />
 
