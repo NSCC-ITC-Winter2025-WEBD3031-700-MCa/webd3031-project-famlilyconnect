@@ -91,28 +91,25 @@ export const authOptions: NextAuthOptions = {
       // const { token } = payload;
       // const user = payload.user;
 
-      if (user) {
-        return {
-          ...token,
-          id: user.id,
-          // role: user.role,
-        };
-      }
+     
+        if (user) {
+          token.id = user.id;
+          
+        }
+        console.log('JWT Token:',token, user);  
+      
       return token;
     },
 
     session: async ({ session, token }) => {
-      if (session?.user) {
-        return {
-          ...session,
-          user: {
-            ...session.user,
-            id: token?.id,
-            role: token.role,
-          },
-        };
-      }
-      return session;
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          role: token.role
+        }
+      };
     },
     async signIn({ user, account, profile }) {
       if (account?.provider === "google" || account?.provider === "github") {
