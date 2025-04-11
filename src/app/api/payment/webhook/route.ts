@@ -25,19 +25,13 @@ export async function POST(req: NextRequest) {
     // return NextResponse.json({ error: "Webhook Error" }, { status: 400 });
     return new NextResponse(`Webhook Error: ${(err as Error).message}`, {
       status: 400,
-      // headers: {
-      //   "Content-Type": "application/json",
-      // },
     });
   }
 
   // ✅ Handle subscription creation
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-
     console.log("Session Data:", session);
-
-
     const subscriptionId = session.subscription as string;
     const userId = session.metadata?.userId;
     const priceId = session.metadata?.priceId;

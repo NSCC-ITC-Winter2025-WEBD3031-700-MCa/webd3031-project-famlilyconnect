@@ -11,42 +11,37 @@ const PricingBox = ({ product }: { product: Price }) => {
   const { data: session } = useSession(); // Get the session object
   const router = useRouter(); // Get router object instance
 
-  // const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
-  // useEffect(() => {
-  //   if (session) {
-  //     axios
-  //       .get("/api/payment/subscription")
-  //       .then((res) => setIsSubscribed(res.data.isSubscribed))
-  //       .catch((err) => {
-  //         console.error("Error fetching subscription status", err);
-  //         setIsSubscribed(false);
-  //       });
-  //   }
-  // }, [session]);
+  useEffect(() => {
+    if (session) {
+      // Check for session.user.id and use it to fetch subscription status
+      axios
+        .get("/api/payment/subscription")
+        .then((res) => setIsSubscribed(res.data.isSubscribed))
+        .catch((err) => {
+          console.error("Error fetching subscription status", err);
+          setIsSubscribed(false);
+        });
+    }
+  }, [session]);
   
 
   const handleSubscription = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (!session) {
-      // if user is not Logged in, redirect to login page
+    if (!session?.user?.id) {
       router.push("/signin");
       return;
     }
 
     try {
-      const response = await axios.post(
-        "/api/payment",
-        { priceId: product.id },
-        { headers: { "Content-Type": "application/json" } }
-      );
-  
-      // Make sure we get the session URL
+      const response = await axios.post("/api/payment", {
+        priceId: product.id,
+        userId: session.user.id, // Ensure the userId is passed
+      });
       if (response.data.url) {
-        // console.log("Selected priceId:", product.id);
-        // console.log("Session URL:", response.data.url);
-        window.location.assign(response.data.url); // Redirect to Stripe Checkout
+        window.location.assign(response.data.url);
       } else {
         console.error("Error: No URL received from the server", response.data);
       }
