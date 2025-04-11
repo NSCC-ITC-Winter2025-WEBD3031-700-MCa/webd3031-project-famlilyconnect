@@ -12,6 +12,16 @@ export async function GET(req: Request, context: any) {
         name: true,
         email: true,
         image: true,
+        isPremium: true,
+        subscription: {
+          select: {
+            id: true,
+            status: true,
+            stripeSubscriptionId: true,
+            startDate: true,
+            endDate: true,
+          },
+        },
         familyMembers: {
           select: {
             family: {
@@ -43,6 +53,7 @@ export async function GET(req: Request, context: any) {
         role: member.role,
         isMainFamily: member.isMainFamily,
       })),
+      subscription: user.subscription, // Include subscription details
     };
 
     return NextResponse.json(formattedUser);

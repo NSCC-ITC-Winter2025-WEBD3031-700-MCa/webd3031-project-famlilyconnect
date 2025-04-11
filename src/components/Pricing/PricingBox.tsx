@@ -3,13 +3,28 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // Next.js 13+ uses next/navigation
-import React from "react";
+import React, { useEffect, useState } from "react";
 import OfferList from "./OfferList";
 import { Price } from "@/types/price";
 
 const PricingBox = ({ product }: { product: Price }) => {
   const { data: session } = useSession(); // Get the session object
   const router = useRouter(); // Get router object instance
+
+  // const [isSubscribed, setIsSubscribed] = useState(false);
+
+  // useEffect(() => {
+  //   if (session) {
+  //     axios
+  //       .get("/api/payment/subscription")
+  //       .then((res) => setIsSubscribed(res.data.isSubscribed))
+  //       .catch((err) => {
+  //         console.error("Error fetching subscription status", err);
+  //         setIsSubscribed(false);
+  //       });
+  //   }
+  // }, [session]);
+  
 
   const handleSubscription = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

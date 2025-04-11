@@ -3,6 +3,7 @@ import { stripe } from "@/lib/stripe"; // Import shared Stripe instance
 // import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth"; // Import getServerSession from next-auth
 import { authOptions } from '@/utils/auth'; // Import your auth options
+import { prisma } from "@/utils/prismaDB";
 
 
 export async function POST(request: NextRequest) {
@@ -19,6 +20,25 @@ export async function POST(request: NextRequest) {
     );
   }
   const user = session.user.id; // Extract user information from the session
+  const userEmail = session.user.email; // Extract user email from the session
+
+  if (!userEmail) {
+    return NextResponse.json(
+      { error: "Email not found in session." },
+      { status: 400 }
+    );
+  }
+
+  // const existingSubscription = await prisma.subscription.findUnique({
+  //   where: { userId: user },
+  // });
+
+  // if (existingSubscription) {
+  //   return NextResponse.json(
+  //     { error: "You already have an active subscription." },
+  //     { status: 400 }
+  //   );
+  // }
 
   try {
     const checkoutSession = await stripe.checkout.sessions.create({
@@ -32,6 +52,7 @@ export async function POST(request: NextRequest) {
       mode: "subscription",
       success_url: `${process.env.SITE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.SITE_URL}/payment-failed`,
+      customer_email: userEmail!, // Optional: Pre-fill email for the customer
       metadata: {
         userId: user, // Replace with actual user ID from your database
         priceId: priceId, // Optional: Include price ID in metadata
@@ -47,30 +68,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
-/*
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"], // Supports Google Pay & Apple Pay
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      mode: "subscription",
-      success_url: `${process.env.SITE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.SITE_URL}/payment-failed`,
-      // automatic_tax: {enabled: true},
-      metadata: {
-        userId: user.id, // Replace with actual user ID from your database
-        priceId: priceId,
-      },
-    });
-
-    return NextResponse.json({ url: session.url });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
-  */

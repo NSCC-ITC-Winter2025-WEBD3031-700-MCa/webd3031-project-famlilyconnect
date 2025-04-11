@@ -29,18 +29,18 @@ export const pricingData: Price[] = [
       "Advanced documentation",
     ],
   },
-  {
-    id: "price_1R6W7AD7DIzyfrQEZ84QhJjV",
-    unit_amount: 500 + 500,
-    nickname: "Business", 
-    offers: [
-      "10 Users",
-      "All UI components",
-      "Lifetime access",
-      "Unlimited free updates",
-      "Use on 1 (one) project",
-      "3 Months support",
-      "Early access to new features",
-    ],
-  },
+  // {
+  //   id: "price_1R6W7AD7DIzyfrQEZ84QhJjV",
+  //   unit_amount: 500 + 500,
+  //   nickname: "Business", 
+  //   offers: [
+  //     "10 Users",
+  //     "All UI components",
+  //     "Lifetime access",
+  //     "Unlimited free updates",
+  //     "Use on 1 (one) project",
+  //     "3 Months support",
+  //     "Early access to new features",
+  //   ],
+  // },
 ];
