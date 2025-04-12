@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions); // Get the session object from next-auth
 
   if(!session?.user?.id) {
+    console.error("Session not found or user ID missing");
     return NextResponse.json(
       { error: "Unauthorized. User ID not found in session." },
       { status: 401 }

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import JoinFamily from './JoinFamily';
@@ -25,6 +25,7 @@ const ManageFamily = () => {
   const [families, setFamilies] = useState<Family[]>([]);
   const [creatorFamilyId, setCreatorFamilyId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isPremium, setIsPremium] = useState<boolean>(false); // State for checking if the user is premium
   
   const router = useRouter();
 
@@ -34,7 +35,22 @@ const ManageFamily = () => {
 
   useEffect(() => {
     fetchFamilies();
-  }, []);
+    checkPremiumStatus();
+  }, [session]);
+
+  // Function to fetch the premium status
+  const checkPremiumStatus = async () => {
+    if (session) {
+      try {
+        const response = await fetch('/api/payment/subscription');
+        const data = await response.json();
+        setIsPremium(data.isSubscribed); // Set premium status
+      } catch (error) {
+        console.error('Error fetching subscription status', error);
+        setIsPremium(false);
+      }
+    }
+  };
 
   const fetchFamilies = async () => {
     setIsLoading(true);
@@ -103,7 +119,6 @@ const ManageFamily = () => {
       ],
     };
     setFamilies([...families, joinedFamily]);
-    
   };
 
   const getRoleBadge = (role: string) => {
@@ -128,9 +143,9 @@ const ManageFamily = () => {
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Your Family Groups</h3>
           <button 
             onClick={() => setActiveTab('create')}
-            disabled={hasCreatedFamily}
+            disabled={hasCreatedFamily || !isPremium}
             className={`flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg transition duration-200 ${
-              hasCreatedFamily 
+              hasCreatedFamily || !isPremium
                 ? 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400' 
                 : 'bg-green-500 text-white hover:bg-green-600'
             }`}
@@ -200,9 +215,9 @@ const ManageFamily = () => {
 
           <button
             onClick={() => setActiveTab('create')}
-            disabled={hasCreatedFamily}
+            disabled={!isPremium || hasCreatedFamily}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
-              hasCreatedFamily
+              !isPremium || hasCreatedFamily
                 ? 'text-gray-400 border-transparent cursor-not-allowed dark:text-gray-600'
                 : activeTab === 'create'
                 ? 'text-blue-600 border-blue-500 dark:text-blue-300 dark:border-blue-400'
@@ -215,8 +230,11 @@ const ManageFamily = () => {
 
           <button
             onClick={() => setActiveTab('invite')}
+            disabled={!isPremium}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
-              activeTab === 'invite'
+              !isPremium
+                ? 'text-gray-400 border-transparent cursor-not-allowed dark:text-gray-600'
+                : activeTab === 'invite'
                 ? 'text-blue-600 border-blue-500 dark:text-blue-300 dark:border-blue-400'
                 : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
             }`}
