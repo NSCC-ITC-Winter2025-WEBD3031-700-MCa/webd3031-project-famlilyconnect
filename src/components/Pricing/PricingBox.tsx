@@ -98,11 +98,15 @@ const PricingBox = ({ product }: { product: Price }) => {
           </div>
         </div>
         <div className="w-full">
+           {/* Disable the button if user is already subscribed */}
           <button
             onClick={handleSubscription}
-            className="inline-block rounded-md bg-primary px-7 py-3 text-center text-base font-medium text-white transition duration-300 hover:bg-primary/90"
+            className={`inline-block rounded-md bg-primary px-7 py-3 text-center text-base font-medium text-white transition duration-300 hover:bg-primary/90 ${
+              isSubscribed ? "cursor-not-allowed bg-gray-300" : ""
+            }`}
+            disabled={isSubscribed} // Disable the button if the user is already subscribed
           >
-            {session ? "Subscribe" : "Sign In to Subscribe"}
+            {isSubscribed ? "Already Subscribed" : session ? "Subscribe" : "Sign In to Subscribe"}
             {/* Purchase Now */}
           </button>
         </div>
