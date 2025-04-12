@@ -230,8 +230,11 @@ const ManageFamily = () => {
 
           <button
             onClick={() => setActiveTab('invite')}
+            disabled={!isPremium}
             className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
-              activeTab === 'invite'
+              !isPremium
+                ? 'text-gray-400 border-transparent cursor-not-allowed dark:text-gray-600'
+                : activeTab === 'invite'
                 ? 'text-blue-600 border-blue-500 dark:text-blue-300 dark:border-blue-400'
                 : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
             }`}
