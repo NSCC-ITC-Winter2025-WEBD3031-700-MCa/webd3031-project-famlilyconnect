@@ -1,13 +1,12 @@
 'use client';
 import { use, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Metadata } from "next";
 
 
 
 export default function ViewUser() {
   const { id } = useParams();
-  const [user, setUser] = useState<{ name: string; email: string; id: string; role: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; id: string; role: string; isPremium: boolean } | null>(null);
   const [familyMembers, setFamilyMembers] = useState<Array<{ id: string; userId: string; familyId: string; role: string; isMainFamily: boolean } | null>>([]);
   const [userPosts, setUserPosts] = useState<Array<{ id: string; content: string; authorId: string; familyId: string; createdAt: Date } | null>>([]);
   const [photos, setPhotos] = useState<Array<{ id: string; url: string; uploaderId: string; familyId: string; createdAt: Date } | null>>([]);
@@ -114,9 +113,13 @@ export default function ViewUser() {
             <td className="px-4 py-2 font-medium text-gray-600">Email</td>
             <td className="px-4 py-2 text-gray-900">{user.email}</td>
           </tr>
-          <tr>
+          <tr className="border-b">
             <td className="px-4 py-2 font-medium text-gray-600">Role</td>
             <td className="px-4 py-2 text-gray-900">{user.role}</td>
+          </tr>
+          <tr>
+          <td className="px-4 py-2 font-medium text-gray-600">Premium Member</td>
+          <td className="px-4 py-2 text-gray-900">{user.isPremium ? "Yes" : "No"}</td>
           </tr>
         </tbody>
       </table>
