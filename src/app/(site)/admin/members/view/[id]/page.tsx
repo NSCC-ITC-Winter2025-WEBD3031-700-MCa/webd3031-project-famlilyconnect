@@ -282,7 +282,7 @@ export default function ViewUser() {
                   <tr key={photo.id} className="border-b">
                     <td className="px-4 py-2 text-gray-900">{photo.id}</td>
                     <td className="px-4 py-2 text-gray-900 break-words max-w-[200px]">
-                      {photo.url}
+                      <a href={photo.url} className="text-blue-500 hover:text-blue-300">{photo.url}</a>
                     </td>
                     <td className="px-4 py-2 text-gray-900">{photo.uploaderId}</td>
                     <td className="px-4 py-2 text-gray-900">{photo.familyId}</td>
