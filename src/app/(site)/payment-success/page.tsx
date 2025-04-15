@@ -45,21 +45,21 @@ const SuccessPayment = () => {
 
         {!loading && error && (
           <p className="text-red-500 mt-2">
-            We couldn't confirm your session. Please check your email or contact support.
+            We couldn’t confirm your session. Please check your email or contact support.
           </p>
         )}
 
         {!loading && !error && customerEmail && (
           <p className="mt-1 text-gray-500">
-            A receipt will be sent to you shortly: <strong>{customerEmail}</strong>
+            A receipt has been sent to: <strong>{customerEmail}</strong>
           </p>
         )}
 
         <Link
-          href="/family"
+          href="/"
           className="mt-6 inline-block bg-primary text-white px-6 py-2 rounded-md"
         >
-          <span className="ml-2">Go to Family Page</span>
+          <span className="ml-2">Go to Homepage</span>
         </Link>
       </div>
     </div>
