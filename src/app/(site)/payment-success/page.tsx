@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 // import { Link } from "lucide-react";
 import Link from 'next/link';
+import { useRouter } from "next/navigation"; // Adjust the import based on your Next.js version
 
 const SuccessPayment = () => {
   const searchParams = useSearchParams();
@@ -12,6 +13,7 @@ const SuccessPayment = () => {
   const [customerEmail, setCustomerEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (sessionId) {
@@ -19,6 +21,9 @@ const SuccessPayment = () => {
         .get(`/api/payment/session?session_id=${sessionId}`)
         .then((res) => {
           setCustomerEmail(res.data.customer_email);
+
+          // Redirect to the Family Page after successful payment
+          router.push('/family');
         })
         .catch((err) => {
           console.error("Error fetching session:", err);
@@ -31,7 +36,7 @@ const SuccessPayment = () => {
       setLoading(false);
       setError(true);
     }
-  }, [sessionId]);
+  }, [sessionId, router]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -55,12 +60,12 @@ const SuccessPayment = () => {
           </p>
         )}
 
-        <Link
+        {/* <Link
           href="/"
           className="mt-6 inline-block bg-primary text-white px-6 py-2 rounded-md"
         >
           <span className="ml-2">Go to Homepage</span>
-        </Link>
+        </Link> */}
       </div>
     </div>
   );

@@ -18,15 +18,18 @@ export const pricingData: Price[] = [
   // },
   {
     id: "price_1R4QGtD7DIzyfrQEGOQY8lEk",
-    unit_amount: 500,
+    unit_amount: 500, // Price in cents (i.e., $5.00)
     nickname: "Premium",
     offers: [
-      "5 Users",
-      "Access to all UI components",
-      "6 month access",
-      "limited free updates",
-      "6 Months priority support",
-      "Advanced documentation",
+      "Create Your Own Family",
+      "Invite Family Members",
+      "Unlimited Posts",
+      "Create Family Events",
+      "Upload Unlimited Photos",
+      "5 Users: Allow up to 5 users",
+      "6-Month Access",
+      "Limited Free Updates",
+      "6-Month Priority Support",
     ],
   },
   // {
