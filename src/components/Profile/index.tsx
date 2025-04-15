@@ -57,7 +57,7 @@ export default function ProfilePage() {
   const params = useParams();
   const id = params.id as string;
   const router = useRouter();
-
+  const userSubscription = userInfo?.subscription;
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -694,17 +694,27 @@ export default function ProfilePage() {
                         </div>
                       </div>
 
-                      <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800">
+                      {/* <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800">
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="text-lg font-medium text-black dark:text-white">
                               Plan
                             </h3>
                             <p className="mt-1 text-sm text-gray-400">
-                              {userInfo?.subscription ? userInfo.subscription.priceId : "N/A"}
+                              {userInfo?.subscription ? userInfo.subscription.priceId : 0} Per Month
                             </p>
                           </div>
                         </div>
+                      </div> */}
+
+                      {/* Price Display */}
+                      <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800 mt-4">
+                        <h3 className="text-lg font-medium text-black dark:text-white">Price</h3>
+                        <p className="mt-1 text-sm text-gray-400">
+                          {userSubscription
+                            ? `$ ${(userSubscription.priceId === "price_1R4QGtD7DIzyfrQEGOQY8lEk" ? 5 : 5).toFixed(2)} / month` 
+                            : "No Active Plan"}
+                        </p>
                       </div>
 
                       <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800">
@@ -735,6 +745,12 @@ export default function ProfilePage() {
                             </p>
                           </div>
                         </div>
+                      </div>
+
+                      {/* Payment Method (Last 4 digits) */}
+                      <div className="rounded-lg border border-gray-300 bg-white p-4 dark:bg-gray-800">
+                        <h3 className="text-lg font-medium text-black dark:text-white">Payment Method</h3>
+                        <p className="mt-1 text-sm text-gray-400">{userInfo?.subscription ? `**** **** **** ${userInfo.subscription.stripeSubscriptionId.slice(-4)}` : "N/A"}</p>
                       </div>
                     </div>
                   </div>

@@ -94,6 +94,12 @@ export async function POST(req: NextRequest) {
         status: subscription.status, // should be "canceled"
       },
     });
+
+    // Deactivate premium status for the user
+    await prisma.user.update({
+      where: { id: subscription.metadata.userId }, // Ensure you have userId in metadata
+      data: { isPremium: false }, // Set `isPremium` to false when subscription is canceled
+    });
   
     return NextResponse.json({ received: true });
   }
