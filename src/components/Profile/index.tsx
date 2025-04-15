@@ -741,7 +741,7 @@ export default function ProfilePage() {
                             <p className="mt-1 text-sm text-gray-400">
                               {userInfo?.subscription?.endDate
                                 ? new Date(userInfo.subscription.endDate).toLocaleDateString()
-                                : "Ongoing"}
+                                : "N/A"}
                             </p>
                           </div>
                         </div>
